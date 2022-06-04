@@ -1,0 +1,24 @@
+{
+  "name": "chess-app",
+  "version": "1.0.0",
+  "description": "Chess Project v2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss": "npx sass src/styles.scss:public/main.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpatrickldg/chess-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jpatrickldg/chess-app/issues"
+  },
+  "homepage": "https://github.com/jpatrickldg/chess-app#readme",
+  "devDependencies": {
+    "sass": "^1.52.2"
+  }
+}
