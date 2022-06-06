@@ -3,3 +3,41 @@
     margin: 0;
     padding: 0;
 }
+
+h1 {
+    color: rgb(236, 192, 134);
+    font-size: 3vw;
+    text-align: center;
+}
+
+img {
+    display: block;
+    max-width: 70%;
+}
+
+.chessboard {
+    border: 1vw solid rgb(248, 210, 159);
+    display: flex;
+    flex-wrap: wrap;
+    height: 35vw;
+    margin: .5vw auto;
+    width: 35vw;
+}
+
+.cell {
+    align-items: center;
+    cursor: default;
+    display: flex;
+    font-size: 5vw;
+    height: 12.5%;
+    justify-content: center;
+    width: 12.5%;
+}
+
+.dark {
+    background-color: rgb(69, 133, 133);
+}
+
+.light {
+    background-color: rgb(255, 234, 208);
+}
