@@ -59,25 +59,25 @@ createBoard()
 
 document.body.append(chessBoard)
 
-const board = [[],[],[],[],[],[],[],[]]
+const board = [[], [], [], [], [], [], [], []]
 
 
-cells.forEach((element,index) =>{
-    if(index<8){
+cells.forEach((element, index) => {
+    if (index < 8) {
         board[0].push(element)
-    }else if(index<16){
+    } else if (index < 16) {
         board[1].push(element)
-    }else if(index<24){
+    } else if (index < 24) {
         board[2].push(element)
-    }else if(index<32){
+    } else if (index < 32) {
         board[3].push(element)
-    }else if(index<40){
+    } else if (index < 40) {
         board[4].push(element)
-    }else if(index<48){
+    } else if (index < 48) {
         board[5].push(element)
-    }else if(index<56){
+    } else if (index < 56) {
         board[6].push(element)
-    }else{
+    } else {
         board[7].push(element)
     }
 })
@@ -119,106 +119,113 @@ board[6][6].id = "black-pawn"
 board[6][7].id = "black-pawn"
 // console.log(board[0][0])
 
-const peicesFunction =(e)=>{
+const peicesFunction = (e) => {
     const piece = e.target
     const pieceIndex = Array.from(piece.parentElement.children).indexOf(piece)
-    const xyIndex = ()=>{
-        if(pieceIndex<8){
-            x = 0
-            y = pieceIndex
-        }else if(pieceIndex<16){
-            x = 1
-            y = pieceIndex-8
-        }else if(pieceIndex<24){
-            x = 2
-            y = pieceIndex-16
-        }else if(pieceIndex<32){
-            x = 3
-            y = pieceIndex-24
-        }else if(pieceIndex<40){
-            x = 4
-            y = pieceIndex-32
-        }else if(pieceIndex<48){
-            x = 5
-            y = pieceIndex-40
-        }else if(pieceIndex<56){
-            x = 6
-            y = pieceIndex-48
-        }else{
-            x = 7
-            y = pieceIndex-56
-        }
-    }
+    let x, y;
+
+    x = pieceIndex % 8
+    y = (pieceIndex - x) / 8
+
+    console.log(x, y)
+
+    // const xyIndex = ()=>{
+    //     if(pieceIndex<8){
+    //         x = 0
+    //         y = pieceIndex
+    //     }else if(pieceIndex<16){
+    //         x = 1
+    //         y = pieceIndex-8
+    //     }else if(pieceIndex<24){
+    //         x = 2
+    //         y = pieceIndex-16
+    //     }else if(pieceIndex<32){
+    //         x = 3
+    //         y = pieceIndex-24
+    //     }else if(pieceIndex<40){
+    //         x = 4
+    //         y = pieceIndex-32
+    //     }else if(pieceIndex<48){
+    //         x = 5
+    //         y = pieceIndex-40
+    //     }else if(pieceIndex<56){
+    //         x = 6
+    //         y = pieceIndex-48
+    //     }else{
+    //         x = 7
+    //         y = pieceIndex-56
+    //     }
+    // }
     //Knight
-    if(piece.id === "white-knight" || piece.id === "black-knight"){
-        xyIndex()
-        const move = new Chessmoves(y,x)
+    if (piece.id === "white-knight" || piece.id === "black-knight") {
+        // xyIndex()
+        const move = new Chessmoves(y, x)
         move.knight()
-    //Rook
-    }else if(piece.id === "white-rook" || piece.id === "black-rook"){
-        xyIndex()
-        const move = new Chessmoves(y,x)
-        move.rook() 
-    //Pawn
-    }else if(piece.id === "white-pawn"){
-        xyIndex()
-        const move = new Chessmoves(y,x)
-        move.whitepawn() 
-    }else if(piece.id === "black-pawn"){
-        xyIndex()
-        const move = new Chessmoves(y,x)
-        move.blackpawn() 
+        //Rook
+    } else if (piece.id === "white-rook" || piece.id === "black-rook") {
+        // xyIndex()
+        const move = new Chessmoves(y, x)
+        move.rook()
+        //Pawn
+    } else if (piece.id === "white-pawn") {
+        // xyIndex()
+        const move = new Chessmoves(y, x)
+        move.whitepawn()
+    } else if (piece.id === "black-pawn") {
+        // xyIndex()
+        const move = new Chessmoves(y, x)
+        move.blackpawn()
     }
 
 
 }
 
-board.forEach(array=>{array.forEach(element=>element.addEventListener("click",peicesFunction))})
+board.forEach(array => { array.forEach(element => element.addEventListener("click", peicesFunction)) })
 
-class Chessmoves{
-    constructor(x,y){
+class Chessmoves {
+    constructor(x, y) {
         this.x = x
         this.y = y
     }
     knight() {
-        const negativeYtop = this.y-2===-1 || this.y-2===-2 ?0:this.y-2
-        const negativeYLeftRight = this.y-1===-1?0:this.y-1
+        const negativeYtop = this.y - 2 === -1 || this.y - 2 === -2 ? 0 : this.y - 2
+        const negativeYLeftRight = this.y - 1 === -1 ? 0 : this.y - 1
         // const negativeYRight = this.y-1===-1?right1=undefined:this.y-1
 
-        const top1 = board[negativeYtop][this.x-1]
-        const top2 = board[negativeYtop][this.x+1]
+        const top1 = board[negativeYtop][this.x - 1]
+        const top2 = board[negativeYtop][this.x + 1]
         // Bottom
-        const bottom1 = board[this.y+2][this.x-1] 
-        const bottom2 = board[this.y+2][this.x+1]
+        const bottom1 = board[this.y + 2][this.x - 1]
+        const bottom2 = board[this.y + 2][this.x + 1]
         // Left
-        const left1 = board[negativeYLeftRight][this.x-2]
-        const left2 = board[this.y+1][this.x-2]
+        const left1 = board[negativeYLeftRight][this.x - 2]
+        const left2 = board[this.y + 1][this.x - 2]
         // Right
-        const right1 = board[negativeYLeftRight][this.x+2]
-        const right2 = board[this.y+1][this.x+2]
-        
-        const filterMOves = [top1,top2,bottom1,bottom2,left1,left2,right1,right2]
+        const right1 = board[negativeYLeftRight][this.x + 2]
+        const right2 = board[this.y + 1][this.x + 2]
+
+        const filterMOves = [top1, top2, bottom1, bottom2, left1, left2, right1, right2]
         // console.log(filterMOves)
-        const knightMoves = filterMOves.filter(element => element!==undefined) 
+        const knightMoves = filterMOves.filter(element => element !== undefined)
         // console.log(knightMoves)
 
         knightMoves.forEach(element => element.style.backgroundColor = "blue")
     }
     rook() {
         //Vertical Move
-        const verticalMove = [board[0][y],board[1][y],board[2][y],board[3][y],board[4][y],board[5][y],board[6][y],board[7][y]]
+        const verticalMove = [board[0][y], board[1][y], board[2][y], board[3][y], board[4][y], board[5][y], board[6][y], board[7][y]]
         verticalMove.forEach(element => element.style.backgroundColor = "blue")
         //Horizontal Move
         board[x].forEach(element => element.style.backgroundColor = "blue")
     }
-    whitepawn(){
+    whitepawn() {
         //Vertical Move
-        const moveForward = board[x+1][y] 
+        const moveForward = board[x + 1][y]
         moveForward.style.backgroundColor = "blue"
     }
-    blackpawn(){
+    blackpawn() {
         //Vertical Move
-        const moveForward = board[x-1][y] 
+        const moveForward = board[x - 1][y]
         moveForward.style.backgroundColor = "blue"
     }
 }
