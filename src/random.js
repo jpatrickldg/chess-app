@@ -23,7 +23,10 @@ createBoard()
 document.body.append(chessBoard)
 
 
-
+function convertIndex(x, y) {
+    let index = (y * 8) + x
+    return index
+}
 
 class ChessPiece {
     constructor(x, y, name, color) {
@@ -54,6 +57,16 @@ class Pawn extends ChessPiece {
 
     pawnMoves() {
 
+        console.log(this.color)
+        console.log(this.x, this.y)
+        if (this.color === 'black') {
+            this.y += 2
+            // console.log(this.x)
+            const currentCellIndex = convertIndex(this.x, this.y)
+            console.log(currentCellIndex)
+            cells[currentCellIndex].classList.add('blue')
+        }
+
     }
 }
 
@@ -64,6 +77,13 @@ class Rook extends ChessPiece {
 
     rookMoves() {
 
+        for (let i = 0; i < 8; i++) {
+            const currentCellIndex = convertIndex(i, this.y)
+            cells[currentCellIndex].classList.add('blue')
+
+            const currentCellIndexY = convertIndex(this.x, i)
+            cells[currentCellIndexY].classList.add('blue')
+        }
     }
 }
 
@@ -114,6 +134,7 @@ function renderPieces() {
     for (let i = 0; i < 8; i++) {
         new Pawn(i, 6, 'pawn', 'white')
     }
+
     new Rook(0, 7, 'rook', 'white')
     new Rook(7, 7, 'rook', 'white')
     new Knight(1, 7, 'knight', 'white')
@@ -136,4 +157,22 @@ function renderPieces() {
 renderPieces()
 console.log(board)
 
+
+cells.forEach(element => element.addEventListener('click', movePiece))
+
+function movePiece(e) {
+    const piece = e.target;
+    const pieceIndex = Array.from(piece.parentElement.children).indexOf(piece)
+    const x = pieceIndex % 8
+    const y = (pieceIndex - x) / 8
+
+    if (board[x][y] === undefined) {
+        console.log('error')
+    } else if (board[x][y].name === 'pawn') {
+        console.log(board[x][y].name)
+        board[x][y].pawnMoves()
+    } else if (board[x][y].name === 'rook') {
+        board[x][y].rookMoves()
+    }
+}
 

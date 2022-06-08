@@ -42,6 +42,10 @@ img {
   background-color: rgb(255, 234, 208);
 }
 
+.blue {
+  background-color: blue;
+}
+
 #white-rook {
   background-image: url("img/WhiteRook.png");
   background-size: 60%;
