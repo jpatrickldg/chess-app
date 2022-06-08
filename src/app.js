@@ -124,59 +124,30 @@ const peicesFunction = (e) => {
     const pieceIndex = Array.from(piece.parentElement.children).indexOf(piece)
     let x, y;
 
+    const xyIndex = ()=>{
     x = pieceIndex % 8
     y = (pieceIndex - x) / 8
-
-    console.log(x, y)
-
-    // const xyIndex = ()=>{
-    //     if(pieceIndex<8){
-    //         x = 0
-    //         y = pieceIndex
-    //     }else if(pieceIndex<16){
-    //         x = 1
-    //         y = pieceIndex-8
-    //     }else if(pieceIndex<24){
-    //         x = 2
-    //         y = pieceIndex-16
-    //     }else if(pieceIndex<32){
-    //         x = 3
-    //         y = pieceIndex-24
-    //     }else if(pieceIndex<40){
-    //         x = 4
-    //         y = pieceIndex-32
-    //     }else if(pieceIndex<48){
-    //         x = 5
-    //         y = pieceIndex-40
-    //     }else if(pieceIndex<56){
-    //         x = 6
-    //         y = pieceIndex-48
-    //     }else{
-    //         x = 7
-    //         y = pieceIndex-56
-    //     }
-    // }
+    }
     //Knight
     if (piece.id === "white-knight" || piece.id === "black-knight") {
-        // xyIndex()
+        xyIndex()
         const move = new Chessmoves(y, x)
         move.knight()
         //Rook
     } else if (piece.id === "white-rook" || piece.id === "black-rook") {
-        // xyIndex()
+        xyIndex()
         const move = new Chessmoves(y, x)
         move.rook()
         //Pawn
     } else if (piece.id === "white-pawn") {
-        // xyIndex()
+        xyIndex()
         const move = new Chessmoves(y, x)
         move.whitepawn()
     } else if (piece.id === "black-pawn") {
-        // xyIndex()
+        xyIndex()
         const move = new Chessmoves(y, x)
         move.blackpawn()
     }
-
 
 }
 
@@ -213,19 +184,19 @@ class Chessmoves {
     }
     rook() {
         //Vertical Move
-        const verticalMove = [board[0][y], board[1][y], board[2][y], board[3][y], board[4][y], board[5][y], board[6][y], board[7][y]]
+        const verticalMove = [board[0][this.y], board[1][this.y], board[2][this.y], board[3][this.y], board[4][this.y], board[5][this.y], board[6][this.y], board[7][this.y]]
         verticalMove.forEach(element => element.style.backgroundColor = "blue")
         //Horizontal Move
-        board[x].forEach(element => element.style.backgroundColor = "blue")
+        board[this.x].forEach(element => element.style.backgroundColor = "blue")
     }
     whitepawn() {
         //Vertical Move
-        const moveForward = board[x + 1][y]
+        const moveForward = board[this.x + 1][this.y]
         moveForward.style.backgroundColor = "blue"
     }
     blackpawn() {
         //Vertical Move
-        const moveForward = board[x - 1][y]
+        const moveForward = board[this.x - 1][this.y]
         moveForward.style.backgroundColor = "blue"
     }
 }
