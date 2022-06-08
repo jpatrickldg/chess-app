@@ -5,53 +5,16 @@ chessBoard.classList.add('chessboard')
 let cells = []
 
 function createBoard() {
+    let changePattern = false
+    let classToAdd = 'light'
     for (let i = 0; i < 64; i++) {
         cells[i] = document.createElement('div')
-        cells[i].setAttribute('id', `${i}`)
+        // cells[i].setAttribute('id', `${i}`)
         cells[i].classList.add('cell')
+        changePattern = (i % 8 === 0 || i === 0)
+        classToAdd = changePattern ? classToAdd : classToAdd === 'light' ? 'dark' : 'light'
+        cells[i].classList.add(classToAdd)
         chessBoard.appendChild(cells[i])
-    }
-
-    for (let i = 0; i < 8; i++) {
-        if (i % 2 === 0) {
-            cells[i].classList.add('light')
-        } else cells[i].classList.add('dark')
-    }
-
-    for (let i = 8; i < 16; i++) {
-        if (i % 2 === 0) {
-            cells[i].classList.add('dark')
-        } else cells[i].classList.add('light')
-    }
-    for (let i = 16; i < 24; i++) {
-        if (i % 2 === 0) {
-            cells[i].classList.add('light')
-        } else cells[i].classList.add('dark')
-    }
-    for (let i = 24; i < 32; i++) {
-        if (i % 2 === 0) {
-            cells[i].classList.add('dark')
-        } else cells[i].classList.add('light')
-    }
-    for (let i = 32; i < 40; i++) {
-        if (i % 2 === 0) {
-            cells[i].classList.add('light')
-        } else cells[i].classList.add('dark')
-    }
-    for (let i = 40; i < 48; i++) {
-        if (i % 2 === 0) {
-            cells[i].classList.add('dark')
-        } else cells[i].classList.add('light')
-    }
-    for (let i = 48; i < 56; i++) {
-        if (i % 2 === 0) {
-            cells[i].classList.add('light')
-        } else cells[i].classList.add('dark')
-    }
-    for (let i = 56; i < 64; i++) {
-        if (i % 2 === 0) {
-            cells[i].classList.add('dark')
-        } else cells[i].classList.add('light')
     }
 }
 
@@ -60,7 +23,6 @@ createBoard()
 document.body.append(chessBoard)
 
 const board = [[], [], [], [], [], [], [], []]
-
 
 cells.forEach((element, index) => {
     if (index < 8) {
@@ -129,33 +91,6 @@ const peicesFunction = (e) => {
 
     console.log(x, y)
 
-    // const xyIndex = ()=>{
-    //     if(pieceIndex<8){
-    //         x = 0
-    //         y = pieceIndex
-    //     }else if(pieceIndex<16){
-    //         x = 1
-    //         y = pieceIndex-8
-    //     }else if(pieceIndex<24){
-    //         x = 2
-    //         y = pieceIndex-16
-    //     }else if(pieceIndex<32){
-    //         x = 3
-    //         y = pieceIndex-24
-    //     }else if(pieceIndex<40){
-    //         x = 4
-    //         y = pieceIndex-32
-    //     }else if(pieceIndex<48){
-    //         x = 5
-    //         y = pieceIndex-40
-    //     }else if(pieceIndex<56){
-    //         x = 6
-    //         y = pieceIndex-48
-    //     }else{
-    //         x = 7
-    //         y = pieceIndex-56
-    //     }
-    // }
     //Knight
     if (piece.id === "white-knight" || piece.id === "black-knight") {
         // xyIndex()
@@ -171,6 +106,7 @@ const peicesFunction = (e) => {
         // xyIndex()
         const move = new Chessmoves(y, x)
         move.whitepawn()
+        piece.id = ''
     } else if (piece.id === "black-pawn") {
         // xyIndex()
         const move = new Chessmoves(y, x)
@@ -178,9 +114,11 @@ const peicesFunction = (e) => {
     }
 
 
+
 }
 
 board.forEach(array => { array.forEach(element => element.addEventListener("click", peicesFunction)) })
+
 
 class Chessmoves {
     constructor(x, y) {
@@ -188,20 +126,20 @@ class Chessmoves {
         this.y = y
     }
     knight() {
-        const negativeYtop = this.y - 2 === -1 || this.y - 2 === -2 ? 0 : this.y - 2
-        const negativeYLeftRight = this.y - 1 === -1 ? 0 : this.y - 1
+        // const negativeYtop = this.y - 2 === -1 || this.y - 2 === -2 ? 0 : this.y - 2
+        // const negativeYLeftRight = this.y - 1 === -1 ? 0 : this.y - 1
         // const negativeYRight = this.y-1===-1?right1=undefined:this.y-1
 
-        const top1 = board[negativeYtop][this.x - 1]
-        const top2 = board[negativeYtop][this.x + 1]
+        const top1 = board[this.y - 2][this.x - 1]
+        const top2 = board[this.y - 2][this.x + 1]
         // Bottom
         const bottom1 = board[this.y + 2][this.x - 1]
         const bottom2 = board[this.y + 2][this.x + 1]
         // Left
-        const left1 = board[negativeYLeftRight][this.x - 2]
+        const left1 = board[this.y - 1][this.x - 2]
         const left2 = board[this.y + 1][this.x - 2]
         // Right
-        const right1 = board[negativeYLeftRight][this.x + 2]
+        const right1 = board[this.y - 1][this.x + 2]
         const right2 = board[this.y + 1][this.x + 2]
 
         const filterMOves = [top1, top2, bottom1, bottom2, left1, left2, right1, right2]
@@ -213,19 +151,22 @@ class Chessmoves {
     }
     rook() {
         //Vertical Move
-        const verticalMove = [board[0][y], board[1][y], board[2][y], board[3][y], board[4][y], board[5][y], board[6][y], board[7][y]]
+        const verticalMove = [board[0][this.y], board[1][this.y], board[2][this.y], board[3][this.y], board[4][this.y], board[5][this.y], board[6][this.y], board[7][this.y]]
         verticalMove.forEach(element => element.style.backgroundColor = "blue")
         //Horizontal Move
-        board[x].forEach(element => element.style.backgroundColor = "blue")
+        board[this.x].forEach(element => element.style.backgroundColor = "blue")
     }
     whitepawn() {
         //Vertical Move
-        const moveForward = board[x + 1][y]
+        const moveForward = board[this.x + 1][this.y]
         moveForward.style.backgroundColor = "blue"
+        // moveForward.addEventListener('click', function () {
+        //     moveForward.id = 'white-pawn'
+        // })
     }
     blackpawn() {
         //Vertical Move
-        const moveForward = board[x - 1][y]
+        const moveForward = board[this.x - 1][this.y]
         moveForward.style.backgroundColor = "blue"
     }
 }
