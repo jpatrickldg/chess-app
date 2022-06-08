@@ -116,8 +116,18 @@ board[6][3].id = "black-pawn"
 board[6][4].id = "black-pawn"
 board[6][5].id = "black-pawn"
 board[6][6].id = "black-pawn"
-board[6][7].id = "black-pawn"
+board[6][7].id = "black-rook"
 // console.log(board[0][0])
+
+//class black and white for all the pieces
+for (let i = 0; i < 8; i++) {
+    board[0][i].classList.add("white")
+    board[1][i].classList.add("white")
+}
+for (let i = 0; i < 8; i++) {
+    board[6][i].classList.add("black")
+    board[7][i].classList.add("black")
+}
 
 const peicesFunction = (e) => {
     const piece = e.target
@@ -134,10 +144,10 @@ const peicesFunction = (e) => {
         const move = new Chessmoves(y, x)
         move.knight()
         //Rook
-    } else if (piece.id === "white-rook" || piece.id === "black-rook") {
+    } else if (piece.id === "black-rook") {
         xyIndex()
         const move = new Chessmoves(y, x)
-        move.rook()
+        move.blackrook()
         //Pawn
     } else if (piece.id === "white-pawn") {
         xyIndex()
@@ -154,9 +164,9 @@ const peicesFunction = (e) => {
 board.forEach(array => { array.forEach(element => element.addEventListener("click", peicesFunction)) })
 
 class Chessmoves {
-    constructor(x, y) {
-        this.x = x
+    constructor(y, x) {
         this.y = y
+        this.x = x
     }
     knight() {
         const negativeYtop = this.y - 2 === -1 || this.y - 2 === -2 ? 0 : this.y - 2
@@ -182,12 +192,48 @@ class Chessmoves {
 
         knightMoves.forEach(element => element.style.backgroundColor = "blue")
     }
-    rook() {
+    blackrook() {
         //Vertical Move
-        const verticalMove = [board[0][this.y], board[1][this.y], board[2][this.y], board[3][this.y], board[4][this.y], board[5][this.y], board[6][this.y], board[7][this.y]]
-        verticalMove.forEach(element => element.style.backgroundColor = "blue")
+        // const verticalMove = [board[0][this.y], board[1][this.y], board[2][this.y], board[3][this.y], board[4][this.y], board[5][this.y], board[6][this.y], board[7][this.y]]
+        // verticalMove.forEach(element => element.style.backgroundColor = "blue")
+        
+
+    
+        for (let i = this.y+1 ; i < 8; i++) {
+            if(board[i][this.x].classList.contains("black")){
+                break
+            }else if(board[i][this.x].classList.contains("white")){
+                board[i][this.x].style.backgroundColor = "yellow"
+                board[i][this.x].addEventListener("click",capture)
+                break
+            }else{
+                board[i][this.x].style.backgroundColor = "yellow"
+            }
+        }
+        for (let i = this.y-1 ; i > -1; i--) {
+            const capture = ()=>{
+                board[i][this.x].id = "black-rook"
+                board[i][this.x].classList.remove("white")
+                board[i][this.x].classList.add("black")
+
+                board[this.y][this.x].id = ""
+                board[this.y][this.x].classList.remove("black")
+            }
+
+            if(board[i][this.x].classList.contains("black")){
+                break
+            }else if(board[i][this.x].classList.contains("white")){
+                board[i][this.x].style.backgroundColor = "yellow"
+                board[i][this.x].addEventListener("click",capture)
+                break
+            }else{
+                board[i][this.x].style.backgroundColor = "yellow"
+            }
+        }
+
+
         //Horizontal Move
-        board[this.x].forEach(element => element.style.backgroundColor = "blue")
+        // board[this.x].forEach(element => element.style.backgroundColor = "blue")
     }
     whitepawn() {
         //Vertical Move
