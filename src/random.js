@@ -3,7 +3,14 @@ chessBoard.setAttribute('id', 'chess-board')
 chessBoard.classList.add('chessboard')
 
 let cells = []
-const board = [[], [], [], [], [], [], [], []]
+const board = [[{}, {}, {}, {}, {}, {}, {}, {}],
+[{}, {}, {}, {}, {}, {}, {}, {}],
+[{}, {}, {}, {}, {}, {}, {}, {}],
+[{}, {}, {}, {}, {}, {}, {}, {}],
+[{}, {}, {}, {}, {}, {}, {}, {}],
+[{}, {}, {}, {}, {}, {}, {}, {}],
+[{}, {}, {}, {}, {}, {}, {}, {}],
+[{}, {}, {}, {}, {}, {}, {}, {}]]
 
 function createBoard() {
     let changePattern = false
@@ -50,24 +57,60 @@ ChessPiece.prototype.addId = function () {
     cells[cellsIndex].id = `${this.color}-${this.name}`
 }
 
+function removeID(index) {
+    cells[index].id = ''
+}
+
+function addIdToCell(index, object) {
+    cells[index].id = `${object.color}-${object.name}`
+}
+
 class Pawn extends ChessPiece {
     constructor(x, y, name, color) {
         super(x, y, name, color)
     }
 
     pawnMoves() {
-
+        let piece = this
+        console.log(this)
         console.log(this.color)
         console.log(this.x, this.y)
         if (this.color === 'black') {
-            this.y += 2
+            let yCopy = this.y + 2
             // console.log(this.x)
-            const currentCellIndex = convertIndex(this.x, this.y)
+            const existingIndex = convertIndex(this.x, this.y)
+            const currentCellIndex = convertIndex(this.x, yCopy)
             console.log(currentCellIndex)
             cells[currentCellIndex].classList.add('blue')
+            cells[currentCellIndex].addEventListener('click', function () {
+                // console.log(piece.y)
+                board[piece.x][piece.y] = {}
+                removeID(existingIndex)
+                // cells[existingIndex].removeEventListener('click', movePiece)
+
+                let xy = getXY(currentCellIndex)
+                board[xy[0]][xy[1]] = piece
+                piece.x = xy[0]
+                piece.y = xy[1]
+                addIdToCell(currentCellIndex, piece)
+                cells[currentCellIndex].classList.remove('blue')
+                removeListeners()
+                addListenerToOccupiedSquare()
+
+
+            })
         }
 
     }
+}
+
+function getXY(index) {
+    let coords = []
+    const x = index % 8
+    const y = (index - x) / 8
+    coords.push(x)
+    coords.push(y)
+    return coords
 }
 
 class Rook extends ChessPiece {
@@ -158,9 +201,29 @@ renderPieces()
 console.log(board)
 
 
-cells.forEach(element => element.addEventListener('click', movePiece))
+// cells.forEach(element => element.addEventListener('click', movePiece))
+
+function removeListeners() {
+    for (let i = 0; i < cells.length; i++) {
+        cells[i].removeEventListener('click', movePiece)
+    }
+    console.log('remove')
+}
+function addListenerToOccupiedSquare() {
+    for (let i = 0; i < cells.length; i++) {
+        if (cells[i].id !== '') {
+            cells[i].addEventListener('click', movePiece)
+        }
+    }
+    console.log('add')
+}
+
+addListenerToOccupiedSquare()
+
+
 
 function movePiece(e) {
+    console.log('Have listener')
     const piece = e.target;
     const pieceIndex = Array.from(piece.parentElement.children).indexOf(piece)
     const x = pieceIndex % 8
