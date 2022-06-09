@@ -84,16 +84,88 @@ class Pawn extends ChessPiece {
         if (this.firstTurn === true) {
             if (this.color === 'black') {
                 yCopy.push(this.y + 1)
-                yCopy.push(this.y + 2)
+
+                if (Object.keys(board[this.x][this.y + 1]).length === 0) {
+                    xCopy.push(this.x)
+                }
+
+                if ((Object.keys(board[this.x][this.y + 1]).length === 0) && (Object.keys(board[this.x][this.y + 2]).length === 0)) {
+                    yCopy.push(this.y + 2)
+                }
+
+                if (board[this.x - 1][this.y + 1].color === 'white') {
+                    xCopy.push(this.x - 1)
+                }
+
+                if (board[this.x + 1][this.y + 1].color === 'white') {
+                    xCopy.push(this.x + 1)
+                }
+
+                // for (let i = 1; i < 3; i++) {
+                //     if (Object.keys(board[this.x][this.y + i]).length === 0) {
+                //         yCopy.push(this.y + i)
+                //     }
+                // }
             }
             else {
                 yCopy.push(this.y - 1)
-                yCopy.push(this.y - 2)
+
+                if (Object.keys(board[this.x][this.y - 1]).length === 0) {
+                    xCopy.push(this.x)
+                }
+
+                if ((Object.keys(board[this.x][this.y - 1]).length === 0) && (Object.keys(board[this.x][this.y - 2]).length === 0)) {
+                    yCopy.push(this.y - 2)
+                }
+
+                if (board[this.x - 1][this.y - 1].color === 'black') {
+                    xCopy.push(this.x - 1)
+                }
+
+                if (board[this.x + 1][this.y - 1].color === 'black') {
+                    xCopy.push(this.x + 1)
+                }
+                // for (let i = 1; i < 3; i++) {
+                //     if (Object.keys(board[this.x][this.y - i]).length === 0) {
+                //         yCopy.push(this.y - i)
+                //     }
+                // }
             }
         } else {
-            if (this.color === 'black') yCopy.push(this.y + 1)
-            else yCopy.push(this.y - 1)
+            if (this.color === 'black') {
+                yCopy.push(this.y + 1)
+                if (Object.keys(board[this.x][this.y + 1]).length === 0) {
+                    xCopy.push(this.x)
+                }
+                if (board[this.x - 1][this.y + 1].color === 'white') {
+                    xCopy.push(this.x - 1)
+                }
+
+                if (board[this.x + 1][this.y + 1].color === 'white') {
+                    xCopy.push(this.x + 1)
+                }
+                // if (Object.keys(board[this.x][this.y + 1]).length === 0) {
+                //     yCopy.push(this.y + 1)
+                // }
+            }
+            else {
+                yCopy.push(this.y - 1)
+                if (Object.keys(board[this.x][this.y - 1]).length === 0) {
+                    xCopy.push(this.x)
+                }
+
+                if (this.x - 1)
+                    if (board[this.x - 1][this.y - 1].color === 'black') {
+                        xCopy.push(this.x - 1)
+                    }
+
+                if (board[this.x + 1][this.y - 1].color === 'black') {
+                    xCopy.push(this.x + 1)
+                }
+            }
         }
+        console.log(xCopy)
+        console.log(yCopy)
 
         //Check Collisions
 
@@ -102,11 +174,15 @@ class Pawn extends ChessPiece {
 
         const existingIndex = convertIndex(this.x, this.y)
 
-        for (let i = 0; i < yCopy.length; i++) {
-            currentCellIndex.push(convertIndex(this.x, yCopy[i]))
-            cells[currentCellIndex[i]].classList.add('blue')
-            cells[currentCellIndex[i]].addEventListener('click', placePawn)
+        for (let i = 0; i < xCopy.length; i++) {
+            for (let j = 0; j < yCopy.length; j++) {
+                currentCellIndex.push(convertIndex(xCopy[i], yCopy[j]))
+                // cells[currentCellIndex[i]].classList.add('blue')
+                // cells[currentCellIndex[i]].addEventListener('click', placePawn)
+                console.log(currentCellIndex)
+            }
         }
+
 
         console.log(currentCellIndex)
 
@@ -223,11 +299,11 @@ function renderPieces() {
     new Queen(3, 7, 'queen', 'white')
     new King(4, 7, 'king', 'white')
 
-    new Rook(0, 0, 'rook', 'black')
+    new Rook(0, 5, 'rook', 'black')
     new Rook(7, 0, 'rook', 'black')
     new Knight(1, 0, 'knight', 'black')
     new Knight(6, 0, 'knight', 'black')
-    new Bishop(2, 0, 'bishop', 'black')
+    new Bishop(2, 5, 'bishop', 'black')
     new Bishop(5, 0, 'bishop', 'black')
     new Queen(3, 0, 'queen', 'black')
     new King(4, 0, 'king', 'black')
