@@ -1,8 +1,12 @@
+const turnIndicator = document.createElement('h3')
+
+
 const chessBoard = document.createElement('main')
 chessBoard.setAttribute('id', 'chess-board')
 chessBoard.classList.add('chessboard')
 
 let cells = []
+let blackTurn = false;
 const board = [[{}, {}, {}, {}, {}, {}, {}, {}],
 [{}, {}, {}, {}, {}, {}, {}, {}],
 [{}, {}, {}, {}, {}, {}, {}, {}],
@@ -26,9 +30,6 @@ function createBoard() {
 }
 
 createBoard()
-
-document.body.append(chessBoard)
-
 
 function convertIndex(x, y) {
     let index = (y * 8) + x
@@ -55,6 +56,7 @@ ChessPiece.prototype.move = function () {
 ChessPiece.prototype.addId = function () {
     let cellsIndex = (this.y * 8) + this.x
     cells[cellsIndex].id = `${this.color}-${this.name}`
+    cells[cellsIndex].classList.add(this.color)
 }
 
 function removeID(index) {
@@ -63,6 +65,9 @@ function removeID(index) {
 
 function addIdToCell(index, object) {
     cells[index].id = `${object.color}-${object.name}`
+    cells[index].classList.add(object.color)
+
+    console.log(object.color)
 }
 
 class Pawn extends ChessPiece {
@@ -74,6 +79,7 @@ class Pawn extends ChessPiece {
     pawnMoves() {
         let piece = this
         let yCopy = []
+        let xCopy = []
         let currentCellIndex = []
         if (this.firstTurn === true) {
             if (this.color === 'black') {
@@ -88,6 +94,11 @@ class Pawn extends ChessPiece {
             if (this.color === 'black') yCopy.push(this.y + 1)
             else yCopy.push(this.y - 1)
         }
+
+        //Check Collisions
+
+
+        //Coordinates for capture
 
         const existingIndex = convertIndex(this.x, this.y)
 
@@ -105,6 +116,8 @@ class Pawn extends ChessPiece {
 
             board[piece.x][piece.y] = {}
             removeID(existingIndex)
+            cells[existingIndex].classList.remove('black')
+            cells[existingIndex].classList.remove('white')
 
             let x = getX(clickedSquareIndex)
             let y = getY(clickedSquareIndex, x)
@@ -119,6 +132,8 @@ class Pawn extends ChessPiece {
                 cells[currentCellIndex[i]].removeEventListener('click', placePawn)
             }
             removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
             addListenerToOccupiedSquare()
         }
     }
@@ -230,13 +245,23 @@ function removeListeners() {
     }
     console.log('remove')
 }
+
+
+
 function addListenerToOccupiedSquare() {
-    for (let i = 0; i < cells.length; i++) {
-        if (cells[i].id !== '') {
-            cells[i].addEventListener('click', movePiece)
+    if (blackTurn === false) {
+        for (let i = 0; i < cells.length; i++) {
+            if (cells[i].id !== '' && cells[i].classList.contains('white')) {
+                cells[i].addEventListener('click', movePiece)
+            }
+        }
+    } else {
+        for (let i = 0; i < cells.length; i++) {
+            if (cells[i].id !== '' && cells[i].classList.contains('black')) {
+                cells[i].addEventListener('click', movePiece)
+            }
         }
     }
-    console.log('add')
 }
 
 addListenerToOccupiedSquare()
@@ -259,4 +284,17 @@ function movePiece(e) {
         board[x][y].rookMoves()
     }
 }
+
+
+
+function changeTurn() {
+    blackTurn = !blackTurn
+}
+
+const whoseTurn = () => blackTurn ? 'Black' : 'White'
+turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+
+document.body.append(turnIndicator, chessBoard)
+
+
 
