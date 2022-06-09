@@ -66,51 +66,72 @@ function addIdToCell(index, object) {
 }
 
 class Pawn extends ChessPiece {
-    constructor(x, y, name, color) {
+    constructor(x, y, name, color, firstTurn) {
         super(x, y, name, color)
+        this.firstTurn = firstTurn
     }
 
     pawnMoves() {
         let piece = this
-        console.log(this)
-        console.log(this.color)
-        console.log(this.x, this.y)
-        if (this.color === 'black') {
-            let yCopy = this.y + 2
-            // console.log(this.x)
-            const existingIndex = convertIndex(this.x, this.y)
-            const currentCellIndex = convertIndex(this.x, yCopy)
-            console.log(currentCellIndex)
-            cells[currentCellIndex].classList.add('blue')
-            cells[currentCellIndex].addEventListener('click', function () {
-                // console.log(piece.y)
-                board[piece.x][piece.y] = {}
-                removeID(existingIndex)
-                // cells[existingIndex].removeEventListener('click', movePiece)
-
-                let xy = getXY(currentCellIndex)
-                board[xy[0]][xy[1]] = piece
-                piece.x = xy[0]
-                piece.y = xy[1]
-                addIdToCell(currentCellIndex, piece)
-                cells[currentCellIndex].classList.remove('blue')
-                removeListeners()
-                addListenerToOccupiedSquare()
-
-
-            })
+        let yCopy = []
+        let currentCellIndex = []
+        if (this.firstTurn === true) {
+            if (this.color === 'black') {
+                yCopy.push(this.y + 1)
+                yCopy.push(this.y + 2)
+            }
+            else {
+                yCopy.push(this.y - 1)
+                yCopy.push(this.y - 2)
+            }
+        } else {
+            if (this.color === 'black') yCopy.push(this.y + 1)
+            else yCopy.push(this.y - 1)
         }
 
+        const existingIndex = convertIndex(this.x, this.y)
+
+        for (let i = 0; i < yCopy.length; i++) {
+            currentCellIndex.push(convertIndex(this.x, yCopy[i]))
+            cells[currentCellIndex[i]].classList.add('blue')
+            cells[currentCellIndex[i]].addEventListener('click', placePawn)
+        }
+
+        console.log(currentCellIndex)
+
+        function placePawn(e) {
+            const clickedSquare = e.target
+            const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+
+            board[piece.x][piece.y] = {}
+            removeID(existingIndex)
+
+            let x = getX(clickedSquareIndex)
+            let y = getY(clickedSquareIndex, x)
+
+            board[x][y] = piece
+            piece.x = x
+            piece.y = y
+            piece.firstTurn = false
+            addIdToCell(clickedSquareIndex, piece)
+            for (let i = 0; i < currentCellIndex.length; i++) {
+                cells[currentCellIndex[i]].classList.remove('blue')
+                cells[currentCellIndex[i]].removeEventListener('click', placePawn)
+            }
+            removeListeners()
+            addListenerToOccupiedSquare()
+        }
     }
 }
 
-function getXY(index) {
-    let coords = []
+function getX(index) {
     const x = index % 8
+
+    return x
+}
+function getY(index, x) {
     const y = (index - x) / 8
-    coords.push(x)
-    coords.push(y)
-    return coords
+    return y
 }
 
 class Rook extends ChessPiece {
@@ -172,10 +193,10 @@ class King extends ChessPiece {
 
 function renderPieces() {
     for (let i = 0; i < 8; i++) {
-        new Pawn(i, 1, 'pawn', 'black')
+        new Pawn(i, 1, 'pawn', 'black', true)
     }
     for (let i = 0; i < 8; i++) {
-        new Pawn(i, 6, 'pawn', 'white')
+        new Pawn(i, 6, 'pawn', 'white', true)
     }
 
     new Rook(0, 7, 'rook', 'white')
