@@ -33,6 +33,13 @@ function createBoard() {
 
 createBoard()
 
+const cellBoard = [[], [], [], [], [], [], [], []]
+cells.forEach((element,index) => {
+    let x = index % 8
+    let y = (index - x) / 8
+    cellBoard[x][y] = element
+})
+
 function convertIndex(x, y) {
     let index = (y * 8) + x
     return index
@@ -279,13 +286,141 @@ class Rook extends ChessPiece {
     }
 
     rookMoves() {
+        //Capture Function
+        const capture = (e)=>{
+            const targetCell = e.target
+            const cellIndex = Array.from(targetCell.parentElement.children).indexOf(targetCell)
+            let x = cellIndex % 8
+            let y = (cellIndex - x)/8
+            if(blackTurn === true){
+                cellBoard[this.x][this.y].classList.remove("black")
+                cellBoard[this.x][y].classList.remove("white")
+                new Rook(x,y,'rook', 'black')
+            }else{
+                cellBoard[this.x][this.y].classList.remove("white")
+                cellBoard[this.x][y].classList.remove("black")
+                new Rook(x,y,'rook', 'white')
+            }
+            board[this.x][this.y]={}
+            cellBoard[this.x][this.y].id = ""
 
-        for (let i = 0; i < 8; i++) {
-            const openCellIndex = convertIndex(i, this.y)
-            cells[openCellIndex].classList.add('blue')
+            removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+            addListenerToOccupiedSquare()
 
-            const currentCellIndexY = convertIndex(this.x, i)
-            cells[currentCellIndexY].classList.add('blue')
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].classList.remove("blue")
+                cells[i].classList.remove("red")
+            } 
+            for (let i = 0 ; i < 8; i++) {
+                cellBoard[this.x][i].removeEventListener("click",capture)
+                cellBoard[i][this.y].removeEventListener("click",capture)
+            }
+        }
+        //Bottom
+        for (let i = this.y+1 ; i < 8; i++) {
+            if(blackTurn === true){
+                if(board[this.x][i].color === "black"){
+                    break
+                }else if(board[this.x][i].color === "white"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("red")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
+            }else{
+                if(board[this.x][i].color === "white"){
+                    break
+                }else if(board[this.x][i].color === "black"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("red")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
+            }
+        }
+        //Top
+        for (let i = this.y-1 ; i > -1; i--) {
+            if(blackTurn === true){
+                if(board[this.x][i].color === "black"){
+                    break
+                }else if(board[this.x][i].color === "white"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("red")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
+            }else{
+                if(board[this.x][i].color === "white"){
+                    break
+                }else if(board[this.x][i].color === "black"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("red")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
+            }
+        }
+        //Left
+        for (let i = this.x-1 ; i > -1; i--) {
+            if(blackTurn === true){
+                if(board[i][this.y].color === "black"){
+                    break
+                }else if(board[i][this.y].color === "white"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("red")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
+            }else{
+                if(board[i][this.y].color === "white"){
+                    break
+                }else if(board[i][this.y].color === "black"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("red")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
+            }
+        }
+         //Right
+         for (let i = this.x+1 ; i < 8; i++) {
+            if(blackTurn === true){
+                if(board[i][this.y].color === "black"){
+                    break
+                }else if(board[i][this.y].color === "white"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("red")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
+            }else{
+                if(board[i][this.y].color === "white"){
+                    break
+                }else if(board[i][this.y].color === "black"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("red")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
+            }
         }
     }
 }
