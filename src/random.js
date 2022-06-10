@@ -80,57 +80,124 @@ class Pawn extends ChessPiece {
         let piece = this
         let yCopy = []
         let xCopy = []
-        let currentCellIndex = []
+        let openCellIndex = []
+        let captureCellIndex = []
+
+        /////////Get Capture Cells
+        if (this.color === 'black') {
+            if (this.x - 1 >= 0) { //Condition to check if x-coordinate is out of bounds
+                if ((Object.keys(board[this.x - 1][this.y + 1]).length !== 0) && (board[this.x - 1][this.y + 1].color === 'white')) {
+                    captureCellIndex.push(convertIndex(this.x - 1, this.y + 1))
+                }
+            }
+
+            if (this.x + 1 <= 7) { //Condition to check if x-coordinate is out of bounds
+                if ((Object.keys(board[this.x + 1][this.y + 1]).length !== 0) && (board[this.x + 1][this.y + 1].color === 'white')) {
+                    captureCellIndex.push(convertIndex(this.x + 1, this.y + 1))
+                }
+            }
+        }
+
+        if (this.color === 'white') {
+            if (this.x - 1 >= 0) { //Condition to check if x-coordinate is out of bounds
+                if ((Object.keys(board[this.x - 1][this.y - 1]).length !== 0) && (board[this.x - 1][this.y - 1].color === 'black')) {
+                    captureCellIndex.push(convertIndex(this.x - 1, this.y - 1))
+                }
+            }
+
+            if (this.x + 1 <= 7) { //Condition to check if x-coordinate is out of bounds
+                if ((Object.keys(board[this.x + 1][this.y - 1]).length !== 0) && (board[this.x + 1][this.y - 1].color === 'black')) {
+                    captureCellIndex.push(convertIndex(this.x + 1, this.y - 1))
+                }
+            }
+        }
+        /////////////////
+
+        ///////////Get Open Cells to move
         if (this.firstTurn === true) {
             if (this.color === 'black') {
-                yCopy.push(this.y + 1)
-                yCopy.push(this.y + 2)
+
+                for (let i = 1; i < 3; i++) {
+                    if (Object.keys(board[this.x][this.y + i]).length === 0) {
+                        yCopy.push(this.y + i)
+                    }
+                }
             }
-            else {
-                yCopy.push(this.y - 1)
-                yCopy.push(this.y - 2)
+            else if (this.color === 'white') {
+                for (let i = 1; i < 3; i++) {
+                    if (Object.keys(board[this.x][this.y - i]).length === 0) {
+                        yCopy.push(this.y - i)
+                    }
+                }
             }
-        } else {
-            if (this.color === 'black') yCopy.push(this.y + 1)
-            else yCopy.push(this.y - 1)
+        } else if (this.firstTurn === false) {
+            if (this.color === 'black') {
+                if (Object.keys(board[this.x][this.y + 1]).length === 0) {
+                    yCopy.push(this.y + 1)
+                }
+            }
+            else if (this.color === 'white')
+                if (Object.keys(board[this.x][this.y - 1]).length === 0) {
+                    yCopy.push(this.y - 1)
+                }
         }
 
-        //Check Collisions
+        const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
 
-
-        //Coordinates for capture
-
-        const existingIndex = convertIndex(this.x, this.y)
 
         for (let i = 0; i < yCopy.length; i++) {
-            currentCellIndex.push(convertIndex(this.x, yCopy[i]))
-            cells[currentCellIndex[i]].classList.add('blue')
-            cells[currentCellIndex[i]].addEventListener('click', placePawn)
+            openCellIndex.push(convertIndex(this.x, yCopy[i]))
+            cells[openCellIndex[i]].classList.add('blue')
+            cells[openCellIndex[i]].addEventListener('click', placePawn)
         }
 
-        console.log(currentCellIndex)
+        for (let i = 0; i < captureCellIndex.length; i++) {
+            cells[captureCellIndex[i]].classList.add('red')
+            cells[captureCellIndex[i]].addEventListener('click', placePawn)
+        }
+
+        console.log(openCellIndex)
+
 
         function placePawn(e) {
             const clickedSquare = e.target
             const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
 
-            board[piece.x][piece.y] = {}
-            removeID(existingIndex)
+            //Loop to remove listeners/class
+            for (let i = 0; i < openCellIndex.length; i++) {
+                cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placePawn)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placePawn)
+            }
+
+            board[piece.x][piece.y] = {} //epmty the object afte the piece move
+            removeID(existingIndex) //remove the id from the cell
+
+            //remove classes from cell where the piece came from
             cells[existingIndex].classList.remove('black')
             cells[existingIndex].classList.remove('white')
 
-            let x = getX(clickedSquareIndex)
-            let y = getY(clickedSquareIndex, x)
-
-            board[x][y] = piece
-            piece.x = x
-            piece.y = y
-            piece.firstTurn = false
-            addIdToCell(clickedSquareIndex, piece)
-            for (let i = 0; i < currentCellIndex.length; i++) {
-                cells[currentCellIndex[i]].classList.remove('blue')
-                cells[currentCellIndex[i]].removeEventListener('click', placePawn)
+            //Change the class of the cell of the target move spot 
+            if (cells[clickedSquareIndex].classList.contains('black')) {
+                cells[clickedSquareIndex].classList.replace('black', 'white')
             }
+            if (cells[clickedSquareIndex].classList.contains('white')) {
+                cells[clickedSquareIndex].classList.replace('white', 'black')
+            }
+
+            let x = getX(clickedSquareIndex) //get target cell x-coordinate
+            let y = getY(clickedSquareIndex, x) //get target cell y-coordinate
+
+            board[x][y] = piece //move the piece into the target board spot
+            piece.x = x //change the piece's x into the target x
+            piece.y = y //change the piece's y into the target y
+            piece.firstTurn = false
+
+            addIdToCell(clickedSquareIndex, piece)
+
             removeListeners()
             changeTurn()
             turnIndicator.textContent = `Player ${whoseTurn()} Turn`
@@ -157,8 +224,8 @@ class Rook extends ChessPiece {
     rookMoves() {
 
         for (let i = 0; i < 8; i++) {
-            const currentCellIndex = convertIndex(i, this.y)
-            cells[currentCellIndex].classList.add('blue')
+            const openCellIndex = convertIndex(i, this.y)
+            cells[openCellIndex].classList.add('blue')
 
             const currentCellIndexY = convertIndex(this.x, i)
             cells[currentCellIndexY].classList.add('blue')
