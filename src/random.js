@@ -7,6 +7,8 @@ chessBoard.classList.add('chessboard')
 
 let cells = []
 let blackTurn = false;
+let lastMoveIndex
+
 const board = [[{}, {}, {}, {}, {}, {}, {}, {}],
 [{}, {}, {}, {}, {}, {}, {}, {}],
 [{}, {}, {}, {}, {}, {}, {}, {}],
@@ -85,6 +87,7 @@ class Pawn extends ChessPiece {
         let openCellIndex = []
         let captureCellIndex = []
 
+
         /////////Get Capture Cells
         if (this.color === 'black') {
             if (this.x - 1 >= 0) { //Condition to check if x-coordinate is out of bounds
@@ -96,6 +99,18 @@ class Pawn extends ChessPiece {
             if (this.x + 1 <= 7) { //Condition to check if x-coordinate is out of bounds
                 if ((Object.keys(board[this.x + 1][this.y + 1]).length !== 0) && (board[this.x + 1][this.y + 1].color === 'white')) {
                     captureCellIndex.push(convertIndex(this.x + 1, this.y + 1))
+                }
+            }
+
+            //en compassant
+            if (this.y === 4) {
+                console.log('pasok')
+                if (this.x + 1 < 8) {
+                    console.log('ewan')
+                    if ((Object.keys(board[this.x + 1][this.y + 1]).length === 0) && (convertIndex(this.x + 1, this.y) === lastMoveIndex)) {
+                        console.log('valid')
+                        captureCellIndex.push(convertIndex(this.x + 1, this.y + 1))
+                    }
                 }
             }
         }
@@ -144,9 +159,6 @@ class Pawn extends ChessPiece {
                 }
         }
 
-
-
-
         for (let i = 0; i < yCopy.length; i++) {
             openCellIndex.push(convertIndex(this.x, yCopy[i]))
             cells[openCellIndex[i]].classList.add('blue')
@@ -164,6 +176,8 @@ class Pawn extends ChessPiece {
         function placePawn(e) {
             const clickedSquare = e.target
             const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+            lastMoveIndex = clickedSquareIndex
+            console.log(lastMoveIndex)
 
             //Loop to remove listeners/class
             for (let i = 0; i < openCellIndex.length; i++) {
