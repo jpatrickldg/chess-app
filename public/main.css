@@ -59,6 +59,10 @@ span {
   background-color: red;
 }
 
+.pink {
+  background-color: pink;
+}
+
 #white-rook {
   background-image: url("img/WhiteRook.png");
   background-size: 60%;
