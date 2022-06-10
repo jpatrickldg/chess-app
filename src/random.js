@@ -86,6 +86,7 @@ class Pawn extends ChessPiece {
         let xCopy = []
         let openCellIndex = []
         let captureCellIndex = []
+        let encompassantIndex = 0
 
 
         /////////Get Capture Cells
@@ -104,15 +105,20 @@ class Pawn extends ChessPiece {
 
             //en compassant
             if (this.y === 4) {
-                console.log('pasok')
                 if (this.x + 1 < 8) {
-                    console.log('ewan')
-                    if ((Object.keys(board[this.x + 1][this.y + 1]).length === 0) && (convertIndex(this.x + 1, this.y) === lastMoveIndex)) {
-                        console.log('valid')
-                        captureCellIndex.push(convertIndex(this.x + 1, this.y + 1))
+                    if ((Object.keys(board[this.x + 1][this.y + 1]).length === 0) && (convertIndex(this.x + 1, this.y) === lastMoveIndex) &&
+                        (cells[lastMoveIndex].id === 'white-pawn')) {
+                        encompassantIndex = (convertIndex(this.x + 1, this.y + 1))
+                    }
+                }
+                if (this.x - 1 >= 0) {
+                    if ((Object.keys(board[this.x - 1][this.y + 1]).length === 0) && (convertIndex(this.x - 1, this.y) === lastMoveIndex) &&
+                        (cells[lastMoveIndex].id === 'white-pawn')) {
+                        encompassantIndex = (convertIndex(this.x - 1, this.y + 1))
                     }
                 }
             }
+
         }
 
         if (this.color === 'white') {
@@ -125,6 +131,22 @@ class Pawn extends ChessPiece {
             if (this.x + 1 <= 7) { //Condition to check if x-coordinate is out of bounds
                 if ((Object.keys(board[this.x + 1][this.y - 1]).length !== 0) && (board[this.x + 1][this.y - 1].color === 'black')) {
                     captureCellIndex.push(convertIndex(this.x + 1, this.y - 1))
+                }
+            }
+
+            //en compassant
+            if (this.y === 3) {
+                if (this.x + 1 < 8) {
+                    if ((Object.keys(board[this.x + 1][this.y - 1]).length === 0) && (convertIndex(this.x + 1, this.y) === lastMoveIndex) &&
+                        (cells[lastMoveIndex].id === 'black-pawn')) {
+                        encompassantIndex = (convertIndex(this.x + 1, this.y - 1))
+                    }
+                }
+                if (this.x - 1 >= 0) {
+                    if ((Object.keys(board[this.x - 1][this.y - 1]).length === 0) && (convertIndex(this.x - 1, this.y) === lastMoveIndex) &&
+                        (cells[lastMoveIndex].id === 'black-pawn')) {
+                        encompassantIndex = (convertIndex(this.x - 1, this.y - 1))
+                    }
                 }
             }
         }
@@ -170,14 +192,19 @@ class Pawn extends ChessPiece {
             cells[captureCellIndex[i]].addEventListener('click', placePawn)
         }
 
-        console.log(openCellIndex)
+        if (encompassantIndex !== 0) {
+            cells[encompassantIndex].classList.add('pink')
+            cells[encompassantIndex].addEventListener('click', placePawn)
+        }
 
+        console.log(openCellIndex)
 
         function placePawn(e) {
             const clickedSquare = e.target
             const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
             lastMoveIndex = clickedSquareIndex
             console.log(lastMoveIndex)
+
 
             //Loop to remove listeners/class
             for (let i = 0; i < openCellIndex.length; i++) {
@@ -210,6 +237,21 @@ class Pawn extends ChessPiece {
             piece.x = x //change the piece's x into the target x
             piece.y = y //change the piece's y into the target y
             piece.firstTurn = false
+
+            //Check if encompassant
+            if (cells[clickedSquareIndex].classList.contains('pink')) {
+                if (piece.color === 'black') {
+                    board[x][y - 1] = {}
+                    removeID(convertIndex(x, y - 1))
+                    cells[convertIndex(x, y - 1)].classList.remove('white')
+                } else if (piece.color === 'white') {
+                    board[x][y + 1] = {}
+                    removeID(convertIndex(x, y + 1))
+                    cells[convertIndex(x, y + 1)].classList.remove('black')
+                }
+            }
+            cells[clickedSquareIndex].classList.remove('pink')
+            cells[clickedSquareIndex].removeEventListener('click', placePawn)
 
             addIdToCell(clickedSquareIndex, piece)
 
