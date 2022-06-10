@@ -78,6 +78,7 @@ class Pawn extends ChessPiece {
 
     pawnMoves() {
         let piece = this
+        const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
         let yCopy = []
         let xCopy = []
         let openCellIndex = []
@@ -120,14 +121,14 @@ class Pawn extends ChessPiece {
                 for (let i = 1; i < 3; i++) {
                     if (Object.keys(board[this.x][this.y + i]).length === 0) {
                         yCopy.push(this.y + i)
-                    }
+                    } else break
                 }
             }
             else if (this.color === 'white') {
                 for (let i = 1; i < 3; i++) {
                     if (Object.keys(board[this.x][this.y - i]).length === 0) {
                         yCopy.push(this.y - i)
-                    }
+                    } else break
                 }
             }
         } else if (this.firstTurn === false) {
@@ -142,7 +143,7 @@ class Pawn extends ChessPiece {
                 }
         }
 
-        const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
+
 
 
         for (let i = 0; i < yCopy.length; i++) {
@@ -183,8 +184,7 @@ class Pawn extends ChessPiece {
             //Change the class of the cell of the target move spot 
             if (cells[clickedSquareIndex].classList.contains('black')) {
                 cells[clickedSquareIndex].classList.replace('black', 'white')
-            }
-            if (cells[clickedSquareIndex].classList.contains('white')) {
+            } else if (cells[clickedSquareIndex].classList.contains('white')) {
                 cells[clickedSquareIndex].classList.replace('white', 'black')
             }
 
@@ -239,9 +239,210 @@ class Knight extends ChessPiece {
     }
 
     knightMoves() {
+        let piece = this
+        const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
+        let openCellIndex = []
+        let captureCellIndex = []
 
+        if (this.color === 'black') {
+            //Bottom
+            if (this.y + 2 < 8) {
+                if (this.x - 1 >= 0) {
+                    if (Object.keys(board[this.x - 1][this.y + 2]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 1, this.y + 2))
+                    } else if (board[this.x - 1][this.y + 2].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x - 1, this.y + 2))
+                    }
+                }
+                if (this.x + 1 < 8) {
+                    if (Object.keys(board[this.x + 1][this.y + 2]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 1, this.y + 2))
+                    } else if (board[this.x + 1][this.y + 2].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x + 1, this.y + 2))
+                    }
+                }
+            }
+            //Top
+            if (this.y - 2 >= 0) {
+                if (this.x - 1 >= 0) {
+                    if (Object.keys(board[this.x - 1][this.y - 2]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 1, this.y - 2))
+                    } else if (board[this.x - 1][this.y - 2].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x - 1, this.y - 2))
+                    }
+                }
+                if (this.x + 1 < 8) {
+                    if (Object.keys(board[this.x + 1][this.y - 2]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 1, this.y - 2))
+                    } else if (board[this.x + 1][this.y - 2].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x + 1, this.y - 2))
+                    }
+                }
+            }
+            //Left
+            if (this.x - 2 >= 0) {
+                if (this.y - 1 >= 0) {
+                    if (Object.keys(board[this.x - 2][this.y - 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 2, this.y - 1))
+                    } else if (board[this.x - 2][this.y - 1].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x - 2, this.y - 1))
+                    }
+                }
+                if (this.y + 1 < 8) {
+                    if (Object.keys(board[this.x - 2][this.y + 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 2, this.y + 1))
+                    } else if (board[this.x - 2][this.y + 1].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x - 2, this.y + 1))
+                    }
+                }
+            }
+            //Right
+            if (this.x + 2 < 8) {
+                if (this.y - 1 >= 0) {
+                    if (Object.keys(board[this.x + 2][this.y - 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 2, this.y - 1))
+                    } else if (board[this.x + 2][this.y - 1].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x + 2, this.y - 1))
+                    }
+                }
+                if (this.y + 1 < 8) {
+                    if (Object.keys(board[this.x + 2][this.y + 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 2, this.y + 1))
+                    } else if (board[this.x + 2][this.y + 1].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x + 2, this.y + 1))
+                    }
+                }
+            }
+        } else if (this.color === 'white') {
+            if (this.y + 2 < 8) {
+                if (this.x - 1 >= 0) {
+                    if (Object.keys(board[this.x - 1][this.y + 2]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 1, this.y + 2))
+                    } else if (board[this.x - 1][this.y + 2].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x - 1, this.y + 2))
+                    }
+                }
+                if (this.x + 1 < 8) {
+                    if (Object.keys(board[this.x + 1][this.y + 2]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 1, this.y + 2))
+                    } else if (board[this.x + 1][this.y + 2].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x + 1, this.y + 2))
+                    }
+                }
+            }
+            //Top
+            if (this.y - 2 >= 0) {
+                if (this.x - 1 >= 0) {
+                    if (Object.keys(board[this.x - 1][this.y - 2]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 1, this.y - 2))
+                    } else if (board[this.x - 1][this.y - 2].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x - 1, this.y - 2))
+                    }
+                }
+                if (this.x + 1 < 8) {
+                    if (Object.keys(board[this.x + 1][this.y - 2]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 1, this.y - 2))
+                    } else if (board[this.x + 1][this.y - 2].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x + 1, this.y - 2))
+                    }
+                }
+            }
+            //Left
+            if (this.x - 2 >= 0) {
+                if (this.y - 1 >= 0) {
+                    if (Object.keys(board[this.x - 2][this.y - 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 2, this.y - 1))
+                    } else if (board[this.x - 2][this.y - 1].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x - 2, this.y - 1))
+                    }
+                }
+                if (this.y + 1 < 8) {
+                    if (Object.keys(board[this.x - 2][this.y + 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 2, this.y + 1))
+                    } else if (board[this.x - 2][this.y + 1].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x - 2, this.y + 1))
+                    }
+                }
+            }
+            //Right
+            if (this.x + 2 < 8) {
+                if (this.y - 1 >= 0) {
+                    if (Object.keys(board[this.x + 2][this.y - 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 2, this.y - 1))
+                    } else if (board[this.x + 2][this.y - 1].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x + 2, this.y - 1))
+                    }
+                }
+                if (this.y + 1 < 8) {
+                    if (Object.keys(board[this.x + 2][this.y + 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 2, this.y + 1))
+                    } else if (board[this.x + 2][this.y + 1].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x + 2, this.y + 1))
+                    }
+                }
+            }
+        }
+        console.log(openCellIndex)
+
+        for (let i = 0; i < openCellIndex.length; i++) {
+            cells[openCellIndex[i]].classList.add('blue')
+            cells[openCellIndex[i]].addEventListener('click', placeKnight)
+        }
+
+        for (let i = 0; i < captureCellIndex.length; i++) {
+            cells[captureCellIndex[i]].classList.add('red')
+            cells[captureCellIndex[i]].addEventListener('click', placeKnight)
+        }
+
+        function placeKnight(e) {
+            const clickedSquare = e.target
+            const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+
+            for (let i = 0; i < openCellIndex.length; i++) {
+                cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placeKnight)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placeKnight)
+            }
+
+            board[piece.x][piece.y] = {} //epmty the object afte the piece move
+            removeID(existingIndex) //remove the id from the cell
+
+            //remove classes from cell where the piece came from
+            cells[existingIndex].classList.remove('black')
+            cells[existingIndex].classList.remove('white')
+
+            //Change the class of the cell of the target move spot 
+            if (cells[clickedSquareIndex].classList.contains('black')) {
+                cells[clickedSquareIndex].classList.replace('black', 'white')
+            } else if (cells[clickedSquareIndex].classList.contains('white')) {
+                cells[clickedSquareIndex].classList.replace('white', 'black')
+            }
+
+
+
+
+            let x = getX(clickedSquareIndex) //get target cell x-coordinate
+            let y = getY(clickedSquareIndex, x) //get target cell y-coordinate
+
+            board[x][y] = piece //move the piece into the target board spot
+            piece.x = x //change the piece's x into the target x
+            piece.y = y //change the piece's y into the target y
+            piece.firstTurn = false
+
+            addIdToCell(clickedSquareIndex, piece)
+
+            removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+            addListenerToOccupiedSquare()
+        }
     }
 }
+
+//Bottom
 
 class Bishop extends ChessPiece {
     constructor(x, y, name, color) {
@@ -249,7 +450,178 @@ class Bishop extends ChessPiece {
     }
 
     bishopMoves() {
+        let piece = this
+        const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
+        let openCellIndex = []
+        let captureCellIndex = []
 
+
+        if (this.color === 'black') {
+            //Top Going Left
+            for (let i = 1; i < 9; i++) {
+                if (this.y - i >= 0) {
+                    if (this.x - i >= 0) {
+                        if (Object.keys(board[this.x - i][this.y - i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x - i, this.y - i))
+                        } else if (board[this.x - i][this.y - i].color === 'white') {
+                            captureCellIndex.push(convertIndex(this.x - i, this.y - i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Top Going Right
+            for (let i = 1; i < 9; i++) {
+                if (this.y - i >= 0) {
+                    if (this.x + i < 8) {
+                        if (Object.keys(board[this.x + i][this.y - i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x + i, this.y - i))
+                        } else if (board[this.x + i][this.y - i].color === 'white') {
+                            captureCellIndex.push(convertIndex(this.x + i, this.y - i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Bottom Going Left
+            for (let i = 1; i < 9; i++) {
+                if (this.y + i < 8) {
+                    if (this.x - i >= 0) {
+                        if (Object.keys(board[this.x - i][this.y + i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x - i, this.y + i))
+                        } else if (board[this.x - i][this.y + i].color === 'white') {
+                            captureCellIndex.push(convertIndex(this.x - i, this.y + i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Bottom Going Right
+            for (let i = 1; i < 9; i++) {
+                if (this.y + i < 8) {
+                    if (this.x + i < 8) {
+                        if (Object.keys(board[this.x + i][this.y + i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x + i, this.y + i))
+                            console.log(i, openCellIndex)
+                            console.log(captureCellIndex)
+                        } else if (board[this.x + i][this.y + i].color === 'white') {
+                            console.log(i)
+                            captureCellIndex.push(convertIndex(this.x + i, this.y + i))
+                            console.log(i, captureCellIndex)
+                            break
+                        } else break
+                    } else break
+                } else break
+            }
+        } else if (this.color === 'white') {
+            for (let i = 1; i < 9; i++) {
+                if (this.y - i >= 0) {
+                    if (this.x - i >= 0) {
+                        if (Object.keys(board[this.x - i][this.y - i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x - i, this.y - i))
+                        } else if (board[this.x - i][this.y - i].color === 'black') {
+                            captureCellIndex.push(convertIndex(this.x - i, this.y - i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Top Going Right
+            for (let i = 1; i < 9; i++) {
+                if (this.y - i >= 0) {
+                    if (this.x + i < 8) {
+                        if (Object.keys(board[this.x + i][this.y - i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x + i, this.y - i))
+                        } else if (board[this.x + i][this.y - i].color === 'black') {
+                            captureCellIndex.push(convertIndex(this.x + i, this.y - i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Bottom Going Left
+            for (let i = 1; i < 9; i++) {
+                if (this.y + i < 8) {
+                    if (this.x - i >= 0) {
+                        if (Object.keys(board[this.x - i][this.y + i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x - i, this.y + i))
+                        } else if (board[this.x - i][this.y + i].color === 'black') {
+                            captureCellIndex.push(convertIndex(this.x - i, this.y + i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Bottom Going Right
+            for (let i = 1; i < 9; i++) {
+                if (this.y + i < 8) {
+                    if (this.x + i < 8) {
+                        if (Object.keys(board[this.x + i][this.y + i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x + i, this.y + i))
+                        } else if (board[this.x + i][this.y + i].color === 'black') {
+                            captureCellIndex.push(convertIndex(this.x + i, this.y + i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+        }
+        console.log(openCellIndex)
+        for (let i = 0; i < openCellIndex.length; i++) {
+            cells[openCellIndex[i]].classList.add('blue')
+            cells[openCellIndex[i]].addEventListener('click', placeBishop)
+        }
+
+        for (let i = 0; i < captureCellIndex.length; i++) {
+            cells[captureCellIndex[i]].classList.add('red')
+            cells[captureCellIndex[i]].addEventListener('click', placeBishop)
+        }
+
+        function placeBishop(e) {
+            const clickedSquare = e.target
+            const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+
+            for (let i = 0; i < openCellIndex.length; i++) {
+                cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placeBishop)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placeBishop)
+            }
+
+            board[piece.x][piece.y] = {} //epmty the object afte the piece move
+            removeID(existingIndex) //remove the id from the cell
+
+            //remove classes from cell where the piece came from
+            cells[existingIndex].classList.remove('black')
+            cells[existingIndex].classList.remove('white')
+
+            //Change the class of the cell of the target move spot 
+            if (cells[clickedSquareIndex].classList.contains('black')) {
+                cells[clickedSquareIndex].classList.replace('black', 'white')
+            } else if (cells[clickedSquareIndex].classList.contains('white')) {
+                cells[clickedSquareIndex].classList.replace('white', 'black')
+            }
+
+
+
+
+            let x = getX(clickedSquareIndex) //get target cell x-coordinate
+            let y = getY(clickedSquareIndex, x) //get target cell y-coordinate
+
+            board[x][y] = piece //move the piece into the target board spot
+            piece.x = x //change the piece's x into the target x
+            piece.y = y //change the piece's y into the target y
+            piece.firstTurn = false
+
+            addIdToCell(clickedSquareIndex, piece)
+
+            removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+            addListenerToOccupiedSquare()
+        }
     }
 }
 
@@ -269,7 +641,203 @@ class King extends ChessPiece {
     }
 
     kingMoves() {
+        let piece = this
+        const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
+        let openCellIndex = []
+        let captureCellIndex = []
 
+        if (this.color === 'black') {
+            //TOP
+            if (this.y - 1 >= 0) {
+                //Top
+                if (Object.keys(board[this.x][this.y - 1]).length === 0) {
+                    openCellIndex.push(convertIndex(this.x, this.y - 1))
+                } else if (board[this.x][this.y - 1].color === 'white') {
+                    captureCellIndex.push(convertIndex(this.x, this.y - 1))
+                }
+                //Top Left
+                if (this.x - 1 >= 0) {
+                    if (Object.keys(board[this.x - 1][this.y - 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 1, this.y - 1))
+                    } else if (board[this.x - 1][this.y - 1].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x - 1, this.y - 1))
+                    }
+                }
+                //Top Right
+                if (this.x + 1 < 8) {
+                    if (Object.keys(board[this.x + 1][this.y - 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 1, this.y - 1))
+                    } else if (board[this.x + 1][this.y - 1].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x + 1, this.y - 1))
+                    }
+                }
+            }
+            //BOTTOM
+            if (this.y + 1 < 8) {
+                //Bot
+                if (Object.keys(board[this.x][this.y + 1]).length === 0) {
+                    openCellIndex.push(convertIndex(this.x, this.y + 1))
+                } else if (board[this.x][this.y + 1].color === 'white') {
+                    captureCellIndex.push(convertIndex(this.x, this.y + 1))
+                }
+                //Bot Left
+                if (this.x - 1 >= 0) {
+                    if (Object.keys(board[this.x - 1][this.y + 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 1, this.y + 1))
+                    } else if (board[this.x - 1][this.y + 1].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x - 1, this.y + 1))
+                    }
+                }
+                //Bot Right
+                if (this.x + 1 < 8) {
+                    if (Object.keys(board[this.x + 1][this.y + 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 1, this.y + 1))
+                    } else if (board[this.x + 1][this.y + 1].color === 'white') {
+                        captureCellIndex.push(convertIndex(this.x + 1, this.y + 1))
+                    }
+                }
+            }
+            //LEFT
+            if (this.x - 1 >= 0) {
+                if (Object.keys(board[this.x - 1][this.y]).length === 0) {
+                    openCellIndex.push(convertIndex(this.x - 1, this.y))
+                } else if (board[this.x - 1][this.y].color === 'white') {
+                    captureCellIndex.push(convertIndex(this.x - 1, this.y))
+                }
+            }
+            //RIGHT
+            if (this.x + 1 < 8) {
+                if (Object.keys(board[this.x + 1][this.y]).length === 0) {
+                    openCellIndex.push(convertIndex(this.x + 1, this.y))
+                } else if (board[this.x + 1][this.y].color === 'white') {
+                    captureCellIndex.push(convertIndex(this.x + 1, this.y))
+                }
+            }
+
+        } else if (this.color === 'white') {
+            //TOP
+            if (this.y - 1 >= 0) {
+                //Top
+                if (Object.keys(board[this.x][this.y - 1]).length === 0) {
+                    openCellIndex.push(convertIndex(this.x, this.y - 1))
+                } else if (board[this.x][this.y - 1].color === 'black') {
+                    captureCellIndex.push(convertIndex(this.x, this.y - 1))
+                }
+                //Top Left
+                if (this.x - 1 >= 0) {
+                    if (Object.keys(board[this.x - 1][this.y - 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 1, this.y - 1))
+                    } else if (board[this.x - 1][this.y - 1].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x - 1, this.y - 1))
+                    }
+                }
+                //Top Right
+                if (this.x + 1 < 8) {
+                    if (Object.keys(board[this.x + 1][this.y - 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 1, this.y - 1))
+                    } else if (board[this.x + 1][this.y - 1].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x + 1, this.y - 1))
+                    }
+                }
+            }
+            //BOTTOM
+            if (this.y + 1 < 8) {
+                //Bot
+                if (Object.keys(board[this.x][this.y + 1]).length === 0) {
+                    openCellIndex.push(convertIndex(this.x, this.y + 1))
+                } else if (board[this.x][this.y + 1].color === 'black') {
+                    captureCellIndex.push(convertIndex(this.x, this.y + 1))
+                }
+                //Bot Left
+                if (this.x - 1 >= 0) {
+                    if (Object.keys(board[this.x - 1][this.y + 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x - 1, this.y + 1))
+                    } else if (board[this.x - 1][this.y + 1].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x - 1, this.y + 1))
+                    }
+                }
+                //Bot Right
+                if (this.x + 1 < 8) {
+                    if (Object.keys(board[this.x + 1][this.y + 1]).length === 0) {
+                        openCellIndex.push(convertIndex(this.x + 1, this.y + 1))
+                    } else if (board[this.x + 1][this.y + 1].color === 'black') {
+                        captureCellIndex.push(convertIndex(this.x + 1, this.y + 1))
+                    }
+                }
+            }
+            //LEFT
+            if (this.x - 1 >= 0) {
+                if (Object.keys(board[this.x - 1][this.y]).length === 0) {
+                    openCellIndex.push(convertIndex(this.x - 1, this.y))
+                } else if (board[this.x - 1][this.y].color === 'black') {
+                    captureCellIndex.push(convertIndex(this.x - 1, this.y))
+                }
+            }
+            //RIGHT
+            if (this.x + 1 < 8) {
+                if (Object.keys(board[this.x + 1][this.y]).length === 0) {
+                    openCellIndex.push(convertIndex(this.x + 1, this.y))
+                } else if (board[this.x + 1][this.y].color === 'black') {
+                    captureCellIndex.push(convertIndex(this.x + 1, this.y))
+                }
+            }
+        }
+
+        for (let i = 0; i < openCellIndex.length; i++) {
+            cells[openCellIndex[i]].classList.add('blue')
+            cells[openCellIndex[i]].addEventListener('click', placeKing)
+        }
+
+        for (let i = 0; i < captureCellIndex.length; i++) {
+            cells[captureCellIndex[i]].classList.add('red')
+            cells[captureCellIndex[i]].addEventListener('click', placeKing)
+        }
+
+        function placeKing(e) {
+            const clickedSquare = e.target
+            const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+
+            for (let i = 0; i < openCellIndex.length; i++) {
+                cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placeKing)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placeKing)
+            }
+
+            board[piece.x][piece.y] = {} //epmty the object afte the piece move
+            removeID(existingIndex) //remove the id from the cell
+
+            //remove classes from cell where the piece came from
+            cells[existingIndex].classList.remove('black')
+            cells[existingIndex].classList.remove('white')
+
+            //Change the class of the cell of the target move spot 
+            if (cells[clickedSquareIndex].classList.contains('black')) {
+                cells[clickedSquareIndex].classList.replace('black', 'white')
+            } else if (cells[clickedSquareIndex].classList.contains('white')) {
+                cells[clickedSquareIndex].classList.replace('white', 'black')
+            }
+
+
+
+
+            let x = getX(clickedSquareIndex) //get target cell x-coordinate
+            let y = getY(clickedSquareIndex, x) //get target cell y-coordinate
+
+            board[x][y] = piece //move the piece into the target board spot
+            piece.x = x //change the piece's x into the target x
+            piece.y = y //change the piece's y into the target y
+            piece.firstTurn = false
+
+            addIdToCell(clickedSquareIndex, piece)
+
+            removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+            addListenerToOccupiedSquare()
+        }
     }
 }
 
@@ -349,9 +917,14 @@ function movePiece(e) {
         board[x][y].pawnMoves()
     } else if (board[x][y].name === 'rook') {
         board[x][y].rookMoves()
+    } else if (board[x][y].name === 'knight') {
+        board[x][y].knightMoves()
+    } else if (board[x][y].name === 'bishop') {
+        board[x][y].bishopMoves()
+    } else if (board[x][y].name === 'king') {
+        board[x][y].kingMoves()
     }
 }
-
 
 
 function changeTurn() {
@@ -362,6 +935,4 @@ const whoseTurn = () => blackTurn ? 'Black' : 'White'
 turnIndicator.textContent = `Player ${whoseTurn()} Turn`
 
 document.body.append(turnIndicator, chessBoard)
-
-
 

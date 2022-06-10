@@ -6,13 +6,13 @@
 
 h1 {
     color: rgb(236, 192, 134);
-    font-size: 3vw;
+    font-size: 50px;
     text-align: center;
 }
 
 h3 {
     color: rgb(69, 133, 133);
-    font-size: 2.5vw;
+    font-size: 40px;
     text-align: center;
 }
 
@@ -29,16 +29,15 @@ span {
     border: 1vw solid rgb(248, 210, 159);
     display: flex;
     flex-wrap: wrap;
-    height: 35vw;
-    margin: .5vw auto;
-    width: 35vw;
+    margin: 0 auto;
+    height: 600px;
+    width: 600px;
 }
 
 .cell {
     align-items: center;
     cursor: default;
     display: flex;
-    font-size: 5vw;
     height: 12.5%;
     justify-content: center;
     width: 12.5%;
