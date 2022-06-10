@@ -7,7 +7,7 @@ chessBoard.classList.add('chessboard')
 
 let cells = []
 let blackTurn = false;
-let lastMoveIndex
+let lastMoveIndex //To check for encompassant
 
 const board = [[{}, {}, {}, {}, {}, {}, {}, {}],
 [{}, {}, {}, {}, {}, {}, {}, {}],
@@ -103,7 +103,7 @@ class Pawn extends ChessPiece {
                 }
             }
 
-            //en compassant
+            //En compassant capture
             if (this.y === 4) {
                 if (this.x + 1 < 8) {
                     if ((Object.keys(board[this.x + 1][this.y + 1]).length === 0) && (convertIndex(this.x + 1, this.y) === lastMoveIndex) &&
