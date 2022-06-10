@@ -77,6 +77,7 @@ class Pawn extends ChessPiece {
     }
 
     pawnMoves() {
+        removeListeners()
         let piece = this
         const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
         let yCopy = []
@@ -239,6 +240,7 @@ class Knight extends ChessPiece {
     }
 
     knightMoves() {
+        removeListeners()
         let piece = this
         const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
         let openCellIndex = []
@@ -450,6 +452,7 @@ class Bishop extends ChessPiece {
     }
 
     bishopMoves() {
+        removeListeners()
         let piece = this
         const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
         let openCellIndex = []
@@ -641,6 +644,7 @@ class King extends ChessPiece {
     }
 
     kingMoves() {
+        removeListeners()
         let piece = this
         const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
         let openCellIndex = []
