@@ -286,6 +286,7 @@ class Rook extends ChessPiece {
     }
 
     rookMoves() {
+        removeListeners()
         //Capture Function
         const capture = (e)=>{
             const targetCell = e.target
