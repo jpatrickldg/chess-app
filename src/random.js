@@ -162,151 +162,141 @@ class Rook extends ChessPiece {
         super(x, y, name, color)
     }
     rookMoves() {
+        //Capture Function
+        const capture = (e)=>{
+            const targetCell = e.target
+            const cellIndex = Array.from(targetCell.parentElement.children).indexOf(targetCell)
+            let x = cellIndex % 8
+            let y = (cellIndex - x)/8
+            if(blackTurn === true){
+                cellBoard[this.x][this.y].classList.remove("black")
+                cellBoard[this.x][y].classList.remove("white")
+                new Rook(x,y,'rook', 'black')
+            }else{
+                cellBoard[this.x][this.y].classList.remove("white")
+                cellBoard[this.x][y].classList.remove("black")
+                new Rook(x,y,'rook', 'white')
+            }
+            board[this.x][this.y]={}
+            cellBoard[this.x][this.y].id = ""
+            
+            removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+            addListenerToOccupiedSquare()
+
+            cellBoard[this.x][y].removeEventListener("click",capture)
+
+            for (let i = 0; i < cells.length; i++) {
+                    cells[i].classList.remove("blue")
+                } 
+            for (let i = 0 ; i < 8; i++) {
+                cellBoard[this.x][i].removeEventListener("click",capture)
+                cellBoard[i][this.y].removeEventListener("click",capture)
+            }
+        }
         //Bottom
         for (let i = this.y+1 ; i < 8; i++) {
-            const capture = (e)=>{
-                const targetCell = e.target
-                //remove previous position
-                board[this.x][this.y]={}
-                cellBoard[this.x][this.y].id = ""
-                cellBoard[this.x][this.y].classList.remove("black")
-                //add position
-                new Rook(this.x,i, 'rook', 'black')
-                cellBoard[this.x][i].classList.remove("white")
-
-                removeListeners()
-                changeTurn()
-                turnIndicator.textContent = `Player ${whoseTurn()} Turn`
-                addListenerToOccupiedSquare()
-
-                cellBoard[this.x][i].removeEventListener("click",capture)
-
-                for (let i = 0; i < cells.length; i++) {
-                        cells[i].classList.remove("blue")
-                    } 
-
-            }
-            if(board[this.x][i].color === "black"){
-                break
-            }else if(board[this.x][i].color === "white"){
-                cellBoard[this.x][i].addEventListener("click",capture)
-                cellBoard[this.x][i].classList.add("blue")
-                // cells[(i*8)+this.x].classList.add("blue")
-                // cells[(i*8)+this.x].addEventListener("click",capture)
-                break
+            if(blackTurn === true){
+                if(board[this.x][i].color === "black"){
+                    break
+                }else if(board[this.x][i].color === "white"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
             }else{
-                cellBoard[this.x][i].addEventListener("click",capture)
-                cellBoard[this.x][i].classList.add("blue")
-                // cells[(i*8)+this.x].classList.add("blue")
-                // cells[(i*8)+this.x].addEventListener("click",capture)
+                if(board[this.x][i].color === "white"){
+                    break
+                }else if(board[this.x][i].color === "black"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
             }
         }
         //Top
         for (let i = this.y-1 ; i > -1; i--) {
-            const capture = (e)=>{
-                const targetCell = e.target
-                //remove previous position
-                board[this.x][this.y]={}
-                cellBoard[this.x][this.y].id = ""
-                cellBoard[this.x][this.y].classList.remove("black")
-                //add position
-                new Rook(this.x,i, 'rook', 'black')
-                cellBoard[this.x][i].classList.remove("white")
-
-                removeListeners()
-                changeTurn()
-                turnIndicator.textContent = `Player ${whoseTurn()} Turn`
-                addListenerToOccupiedSquare()
-
-                cellBoard[this.x][i].removeEventListener("click",capture)
-
-                for (let i = 0; i < cells.length; i++) {
-                        cells[i].classList.remove("blue")
-                    } 
-                for (let i = 0; i < cells.length; i++) {
-                    if(cells[i].classList.contains("black") || cells[i].classList.contains("white")){
-                    }else{
-                        cells[i].style.pointerEvents = "none"
-                    }
-                } 
-            }
-            if(board[this.x][i].color === "black"){
-                break
-            }else if(board[this.x][i].color === "white"){
-                cellBoard[this.x][i].classList.add("blue")
-                cellBoard[this.x][i].addEventListener("click",capture)
-                break
+            if(blackTurn === true){
+                if(board[this.x][i].color === "black"){
+                    break
+                }else if(board[this.x][i].color === "white"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
             }else{
-                cellBoard[this.x][i].addEventListener("click",capture)
-                cellBoard[this.x][i].classList.add("blue")
+                if(board[this.x][i].color === "white"){
+                    break
+                }else if(board[this.x][i].color === "black"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
             }
         }
         //Left
         for (let i = this.x-1 ; i > -1; i--) {
-            const capture = (e)=>{
-                const targetCell = e.target
-                //remove previous position
-                board[this.x][this.y]={}
-                cellBoard[this.x][this.y].id = ""
-                cellBoard[this.x][this.y].classList.remove("black")
-                //add position
-                new Rook(i,this.y, 'rook', 'black')
-                cellBoard[i][this.y].classList.remove("white")
-
-                removeListeners()
-                changeTurn()
-                turnIndicator.textContent = `Player ${whoseTurn()} Turn`
-                addListenerToOccupiedSquare()
-
-                cellBoard[i][this.y].removeEventListener("click",capture)
-
-                for (let i = 0; i < cells.length; i++) {
-                        cells[i].classList.remove("blue")
-                    } 
-            }
-            if(board[i][this.y].color === "black"){
-                break
-            }else if(board[i][this.y].color === "white"){
-                cellBoard[i][this.y].classList.add("blue")
-                cellBoard[i][this.y].addEventListener("click",capture)
-                break
+            if(blackTurn === true){
+                if(board[i][this.y].color === "black"){
+                    break
+                }else if(board[i][this.y].color === "white"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
             }else{
-                cellBoard[i][this.y].addEventListener("click",capture)
-                cellBoard[i][this.y].classList.add("blue")
+                if(board[i][this.y].color === "white"){
+                    break
+                }else if(board[i][this.y].color === "black"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
             }
         }
-        //Right
-        for (let i = this.x+1 ; i < 8; i++) {
-            const capture = (e)=>{
-                const targetCell = e.target
-                //remove previous position
-                board[this.x][this.y]={}
-                cellBoard[this.x][this.y].id = ""
-                cellBoard[this.x][this.y].classList.remove("black")
-                //add position
-                new Rook(i,this.y, 'rook', 'black')
-                cellBoard[i][this.y].classList.remove("white")
-
-                removeListeners()
-                changeTurn()
-                turnIndicator.textContent = `Player ${whoseTurn()} Turn`
-                addListenerToOccupiedSquare()
-
-                cellBoard[i][this.y].removeEventListener("click",capture)
-
-                for (let i = 0; i < cells.length; i++) {
-                        cells[i].classList.remove("blue")
-                    } 
-            }
-            if(board[i][this.y].color === "black"){
-                break
-            }else if(board[i][this.y].color === "white"){
-                cellBoard[i][this.y].classList.add("blue")
-                cellBoard[i][this.y].addEventListener("click",capture)
-                break
+         //Right
+         for (let i = this.x+1 ; i < 8; i++) {
+            if(blackTurn === true){
+                if(board[i][this.y].color === "black"){
+                    break
+                }else if(board[i][this.y].color === "white"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
             }else{
-                cellBoard[i][this.y].addEventListener("click",capture)
-                cellBoard[i][this.y].classList.add("blue")
+                if(board[i][this.y].color === "white"){
+                    break
+                }else if(board[i][this.y].color === "black"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
             }
         }
     }
