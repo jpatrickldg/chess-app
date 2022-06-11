@@ -309,6 +309,37 @@ class Rook extends ChessPiece {
 
     rookMoves() {
         removeListeners()
+        //add listener to its original position
+        cells[convertIndex(this.x, this.y)].addEventListener('click', unClicked)
+        cells[convertIndex(this.x, this.y)].classList.add('gray')
+        function unClicked(e) {
+            const clickedSquare = e.target
+            const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+            let x = clickedSquareIndex % 8
+            let y = (clickedSquareIndex - x) / 8
+            // Loop to remove listeners/class
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].classList.remove("blue")
+                cells[i].classList.remove("red")
+            }
+            for (let i = 0; i < 8; i++) {
+                cellBoard[x][i].removeEventListener("click", capture)
+                cellBoard[i][y].removeEventListener("click", capture)
+            }
+            //from bishop
+            for (let i = 0; i < openCellIndex.length; i++) {
+                cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placeBishop)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placeBishop)
+            }
+
+            addListenerToOccupiedSquare()
+            cells[clickedSquareIndex].removeEventListener('click', unClicked)
+            cells[clickedSquareIndex].classList.remove('gray')
+        }
         //Capture Function
         const capture = (e) => {
             const targetCell = e.target
@@ -335,6 +366,7 @@ class Rook extends ChessPiece {
             for (let i = 0; i < cells.length; i++) {
                 cells[i].classList.remove("blue")
                 cells[i].classList.remove("red")
+                cells[i].classList.remove("gray")
             }
             for (let i = 0; i < 8; i++) {
                 cellBoard[this.x][i].removeEventListener("click", capture)
@@ -895,6 +927,357 @@ class Queen extends ChessPiece {
     }
 
     queenMoves() {
+        //from RookMoves
+        removeListeners()
+        cells[convertIndex(this.x, this.y)].addEventListener('click', unClicked)
+        cells[convertIndex(this.x, this.y)].classList.add('gray')
+        function unClicked(e) {
+            const clickedSquare = e.target
+            const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+            let x = clickedSquareIndex % 8
+            let y = (clickedSquareIndex - x) / 8
+            // Loop to remove listeners/class
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].classList.remove("blue")
+                cells[i].classList.remove("red")
+            }
+            for (let i = 0; i < 8; i++) {
+                cellBoard[x][i].removeEventListener("click", capture)
+                cellBoard[i][y].removeEventListener("click", capture)
+            }
+
+            addListenerToOccupiedSquare()
+            cells[clickedSquareIndex].removeEventListener('click', unClicked)
+            cells[clickedSquareIndex].classList.remove('gray')
+        }
+        //Capture Function
+        const capture = (e)=>{
+            const targetCell = e.target
+            const cellIndex = Array.from(targetCell.parentElement.children).indexOf(targetCell)
+            let x = cellIndex % 8
+            let y = (cellIndex - x)/8
+            if(blackTurn === true){
+                cellBoard[this.x][this.y].classList.remove("black")
+                cellBoard[this.x][y].classList.remove("white")
+                new Queen(x,y,'queen', 'black')
+            }else{
+                cellBoard[this.x][this.y].classList.remove("white")
+                cellBoard[this.x][y].classList.remove("black")
+                new Queen(x,y,'queen', 'white')
+            }
+            board[this.x][this.y]={}
+            cellBoard[this.x][this.y].id = ""
+
+            removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+            addListenerToOccupiedSquare()
+
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].classList.remove("blue")
+                cells[i].classList.remove("red")
+                cells[i].classList.remove("gray")
+            } 
+            for (let i = 0 ; i < 8; i++) {
+                cellBoard[this.x][i].removeEventListener("click",capture)
+                cellBoard[i][this.y].removeEventListener("click",capture)
+            }
+            //bishop remove listener
+            for (let i = 0; i < openCellIndex.length; i++) {
+                // cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placeBishop)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                // cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placeBishop)
+            }
+        }
+        //Bottom
+        for (let i = this.y+1 ; i < 8; i++) {
+            if(blackTurn === true){
+                if(board[this.x][i].color === "black"){
+                    break
+                }else if(board[this.x][i].color === "white"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("red")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
+            }else{
+                if(board[this.x][i].color === "white"){
+                    break
+                }else if(board[this.x][i].color === "black"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("red")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
+            }
+        }
+        //Top
+        for (let i = this.y-1 ; i > -1; i--) {
+            if(blackTurn === true){
+                if(board[this.x][i].color === "black"){
+                    break
+                }else if(board[this.x][i].color === "white"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("red")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
+            }else{
+                if(board[this.x][i].color === "white"){
+                    break
+                }else if(board[this.x][i].color === "black"){
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("red")
+                    break
+                }else{
+                    cellBoard[this.x][i].addEventListener("click",capture)
+                    cellBoard[this.x][i].classList.add("blue")
+                }
+            }
+        }
+        //Left
+        for (let i = this.x-1 ; i > -1; i--) {
+            if(blackTurn === true){
+                if(board[i][this.y].color === "black"){
+                    break
+                }else if(board[i][this.y].color === "white"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("red")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
+            }else{
+                if(board[i][this.y].color === "white"){
+                    break
+                }else if(board[i][this.y].color === "black"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("red")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
+            }
+        }
+         //Right
+         for (let i = this.x+1 ; i < 8; i++) {
+            if(blackTurn === true){
+                if(board[i][this.y].color === "black"){
+                    break
+                }else if(board[i][this.y].color === "white"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("red")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
+            }else{
+                if(board[i][this.y].color === "white"){
+                    break
+                }else if(board[i][this.y].color === "black"){
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("red")
+                    break
+                }else{
+                    cellBoard[i][this.y].addEventListener("click",capture)
+                    cellBoard[i][this.y].classList.add("blue")
+                }
+            }
+        }
+        //From Bishop Moves
+        let piece = this
+        const existingIndex = convertIndex(this.x, this.y) //Index of the Piece's Original position
+        let openCellIndex = []
+        let captureCellIndex = []
+
+        if (this.color === 'black') {
+            //Top Going Left
+            for (let i = 1; i < 9; i++) {
+                if (this.y - i >= 0) {
+                    if (this.x - i >= 0) {
+                        if (Object.keys(board[this.x - i][this.y - i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x - i, this.y - i))
+                        } else if (board[this.x - i][this.y - i].color === 'white') {
+                            captureCellIndex.push(convertIndex(this.x - i, this.y - i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Top Going Right
+            for (let i = 1; i < 9; i++) {
+                if (this.y - i >= 0) {
+                    if (this.x + i < 8) {
+                        if (Object.keys(board[this.x + i][this.y - i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x + i, this.y - i))
+                        } else if (board[this.x + i][this.y - i].color === 'white') {
+                            captureCellIndex.push(convertIndex(this.x + i, this.y - i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Bottom Going Left
+            for (let i = 1; i < 9; i++) {
+                if (this.y + i < 8) {
+                    if (this.x - i >= 0) {
+                        if (Object.keys(board[this.x - i][this.y + i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x - i, this.y + i))
+                        } else if (board[this.x - i][this.y + i].color === 'white') {
+                            captureCellIndex.push(convertIndex(this.x - i, this.y + i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Bottom Going Right
+            for (let i = 1; i < 9; i++) {
+                if (this.y + i < 8) {
+                    if (this.x + i < 8) {
+                        if (Object.keys(board[this.x + i][this.y + i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x + i, this.y + i))
+                            console.log(i, openCellIndex)
+                            console.log(captureCellIndex)
+                        } else if (board[this.x + i][this.y + i].color === 'white') {
+                            console.log(i)
+                            captureCellIndex.push(convertIndex(this.x + i, this.y + i))
+                            console.log(i, captureCellIndex)
+                            break
+                        } else break
+                    } else break
+                } else break
+            }
+        } else if (this.color === 'white') {
+            for (let i = 1; i < 9; i++) {
+                if (this.y - i >= 0) {
+                    if (this.x - i >= 0) {
+                        if (Object.keys(board[this.x - i][this.y - i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x - i, this.y - i))
+                        } else if (board[this.x - i][this.y - i].color === 'black') {
+                            captureCellIndex.push(convertIndex(this.x - i, this.y - i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Top Going Right
+            for (let i = 1; i < 9; i++) {
+                if (this.y - i >= 0) {
+                    if (this.x + i < 8) {
+                        if (Object.keys(board[this.x + i][this.y - i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x + i, this.y - i))
+                        } else if (board[this.x + i][this.y - i].color === 'black') {
+                            captureCellIndex.push(convertIndex(this.x + i, this.y - i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Bottom Going Left
+            for (let i = 1; i < 9; i++) {
+                if (this.y + i < 8) {
+                    if (this.x - i >= 0) {
+                        if (Object.keys(board[this.x - i][this.y + i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x - i, this.y + i))
+                        } else if (board[this.x - i][this.y + i].color === 'black') {
+                            captureCellIndex.push(convertIndex(this.x - i, this.y + i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+            //Bottom Going Right
+            for (let i = 1; i < 9; i++) {
+                if (this.y + i < 8) {
+                    if (this.x + i < 8) {
+                        if (Object.keys(board[this.x + i][this.y + i]).length === 0) {
+                            openCellIndex.push(convertIndex(this.x + i, this.y + i))
+                        } else if (board[this.x + i][this.y + i].color === 'black') {
+                            captureCellIndex.push(convertIndex(this.x + i, this.y + i))
+                            break
+                        } else break
+                    } else break
+                }
+            }
+        }
+        console.log(openCellIndex)
+        for (let i = 0; i < openCellIndex.length; i++) {
+            cells[openCellIndex[i]].classList.add('blue')
+            cells[openCellIndex[i]].addEventListener('click', placeBishop)
+        }
+
+        for (let i = 0; i < captureCellIndex.length; i++) {
+            cells[captureCellIndex[i]].classList.add('red')
+            cells[captureCellIndex[i]].addEventListener('click', placeBishop)
+        }
+
+        function placeBishop(e) {
+            const clickedSquare = e.target
+            const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+
+            for (let i = 0; i < openCellIndex.length; i++) {
+                cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placeBishop)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placeBishop)
+            }
+            //from rook
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].classList.remove("blue")
+                cells[i].classList.remove("red")
+            } 
+            for (let i = 0 ; i < 8; i++) {
+                cellBoard[piece.x][i].removeEventListener("click",capture)
+                cellBoard[i][piece.y].removeEventListener("click",capture)
+            }
+
+            board[piece.x][piece.y] = {} //epmty the object afte the piece move
+            removeID(existingIndex) //remove the id from the cell
+
+            //remove classes from cell where the piece came from
+            cells[existingIndex].classList.remove('black')
+            cells[existingIndex].classList.remove('white')
+            cells[existingIndex].classList.remove('gray')
+
+            //Change the class of the cell of the target move spot 
+            if (cells[clickedSquareIndex].classList.contains('black')) {
+                cells[clickedSquareIndex].classList.replace('black', 'white')
+            } else if (cells[clickedSquareIndex].classList.contains('white')) {
+                cells[clickedSquareIndex].classList.replace('white', 'black')
+            }
+
+
+
+
+            let x = getX(clickedSquareIndex) //get target cell x-coordinate
+            let y = getY(clickedSquareIndex, x) //get target cell y-coordinate
+
+            board[x][y] = piece //move the piece into the target board spot
+            piece.x = x //change the piece's x into the target x
+            piece.y = y //change the piece's y into the target y
+            piece.firstTurn = false
+
+            addIdToCell(clickedSquareIndex, piece)
+
+            removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+            addListenerToOccupiedSquare()
+        }
 
     }
 }
@@ -1209,6 +1592,8 @@ function movePiece(e) {
         board[x][y].bishopMoves()
     } else if (board[x][y].name === 'king') {
         board[x][y].kingMoves()
+    }else if (board[x][y].name === 'queen') {
+        board[x][y].queenMoves()
     }
 }
 
