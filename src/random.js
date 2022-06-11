@@ -326,16 +326,6 @@ class Rook extends ChessPiece {
                 cellBoard[x][i].removeEventListener("click", capture)
                 cellBoard[i][y].removeEventListener("click", capture)
             }
-            //from bishop
-            for (let i = 0; i < openCellIndex.length; i++) {
-                cells[openCellIndex[i]].classList.remove('blue')
-                cells[openCellIndex[i]].removeEventListener('click', placeBishop)
-            }
-            for (let i = 0; i < captureCellIndex.length; i++) {
-                cells[captureCellIndex[i]].classList.remove('red')
-                cells[captureCellIndex[i]].removeEventListener('click', placeBishop)
-            }
-
             addListenerToOccupiedSquare()
             cells[clickedSquareIndex].removeEventListener('click', unClicked)
             cells[clickedSquareIndex].classList.remove('gray')
@@ -945,7 +935,15 @@ class Queen extends ChessPiece {
                 cellBoard[x][i].removeEventListener("click", capture)
                 cellBoard[i][y].removeEventListener("click", capture)
             }
-
+             // from bishop
+             for (let i = 0; i < openCellIndex.length; i++) {
+                cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placeBishop)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placeBishop)
+            }
             addListenerToOccupiedSquare()
             cells[clickedSquareIndex].removeEventListener('click', unClicked)
             cells[clickedSquareIndex].classList.remove('gray')
