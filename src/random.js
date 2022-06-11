@@ -79,6 +79,60 @@ function addIdToCell(index, object) {
     console.log(object.color)
 }
 
+function callBack(piece, existingIndex, openCellIndex, captureCellIndex) {
+    return function placePiece(e) {
+        console.log('valid')
+        const clickedSquare = e.target
+        const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+
+        for (let i = 0; i < openCellIndex.length; i++) {
+            cells[openCellIndex[i]].classList.remove('blue')
+            cells[openCellIndex[i]].removeEventListener('click', placePiece)
+        }
+        for (let i = 0; i < captureCellIndex.length; i++) {
+            cells[captureCellIndex[i]].classList.remove('red')
+            cells[captureCellIndex[i]].removeEventListener('click', placePiece)
+        }
+
+        board[piece.x][piece.y] = {} //epmty the object afte the piece move
+        removeID(existingIndex) //remove the id from the cell
+
+        //remove classes from cell where the piece came from
+        cells[existingIndex].classList.remove('black')
+        cells[existingIndex].classList.remove('white')
+        cells[existingIndex].classList.remove('gray')
+
+        //Change the class of the cell of the target move spot 
+        if (cells[clickedSquareIndex].classList.contains('black')) {
+            cells[clickedSquareIndex].classList.replace('black', 'white')
+        } else if (cells[clickedSquareIndex].classList.contains('white')) {
+            cells[clickedSquareIndex].classList.replace('white', 'black')
+        }
+
+
+
+
+        let x = getX(clickedSquareIndex) //get target cell x-coordinate
+        let y = getY(clickedSquareIndex, x) //get target cell y-coordinate
+
+        board[x][y] = piece //move the piece into the target board spot
+        piece.x = x //change the piece's x into the target x
+        piece.y = y //change the piece's y into the target y
+        piece.firstTurn = false
+
+        addIdToCell(clickedSquareIndex, piece)
+
+        removeListeners()
+        changeTurn()
+        turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+        addListenerToOccupiedSquare()
+    }
+}
+
+
+
+
+
 class Pawn extends ChessPiece {
     constructor(x, y, name, color, firstTurn) {
         super(x, y, name, color)
@@ -626,62 +680,64 @@ class Knight extends ChessPiece {
         }
         console.log(openCellIndex)
 
+        const listener = callBack(piece, existingIndex, openCellIndex, captureCellIndex)
+
         for (let i = 0; i < openCellIndex.length; i++) {
             cells[openCellIndex[i]].classList.add('blue')
-            cells[openCellIndex[i]].addEventListener('click', placeKnight)
+            cells[openCellIndex[i]].addEventListener('click', listener)
         }
 
         for (let i = 0; i < captureCellIndex.length; i++) {
             cells[captureCellIndex[i]].classList.add('red')
-            cells[captureCellIndex[i]].addEventListener('click', placeKnight)
+            cells[captureCellIndex[i]].addEventListener('click', listener)
         }
 
-        function placeKnight(e) {
-            const clickedSquare = e.target
-            const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
+        // function placeKnight(e) {
+        //     const clickedSquare = e.target
+        //     const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
 
-            for (let i = 0; i < openCellIndex.length; i++) {
-                cells[openCellIndex[i]].classList.remove('blue')
-                cells[openCellIndex[i]].removeEventListener('click', placeKnight)
-            }
-            for (let i = 0; i < captureCellIndex.length; i++) {
-                cells[captureCellIndex[i]].classList.remove('red')
-                cells[captureCellIndex[i]].removeEventListener('click', placeKnight)
-            }
+        //     for (let i = 0; i < openCellIndex.length; i++) {
+        //         cells[openCellIndex[i]].classList.remove('blue')
+        //         cells[openCellIndex[i]].removeEventListener('click', placeKnight)
+        //     }
+        //     for (let i = 0; i < captureCellIndex.length; i++) {
+        //         cells[captureCellIndex[i]].classList.remove('red')
+        //         cells[captureCellIndex[i]].removeEventListener('click', placeKnight)
+        //     }
 
-            board[piece.x][piece.y] = {} //epmty the object afte the piece move
-            removeID(existingIndex) //remove the id from the cell
+        //     board[piece.x][piece.y] = {} //epmty the object afte the piece move
+        //     removeID(existingIndex) //remove the id from the cell
 
-            //remove classes from cell where the piece came from
-            cells[existingIndex].classList.remove('black')
-            cells[existingIndex].classList.remove('white')
-            cells[existingIndex].classList.remove('gray')
+        //     //remove classes from cell where the piece came from
+        //     cells[existingIndex].classList.remove('black')
+        //     cells[existingIndex].classList.remove('white')
+        //     cells[existingIndex].classList.remove('gray')
 
-            //Change the class of the cell of the target move spot 
-            if (cells[clickedSquareIndex].classList.contains('black')) {
-                cells[clickedSquareIndex].classList.replace('black', 'white')
-            } else if (cells[clickedSquareIndex].classList.contains('white')) {
-                cells[clickedSquareIndex].classList.replace('white', 'black')
-            }
-
-
+        //     //Change the class of the cell of the target move spot 
+        //     if (cells[clickedSquareIndex].classList.contains('black')) {
+        //         cells[clickedSquareIndex].classList.replace('black', 'white')
+        //     } else if (cells[clickedSquareIndex].classList.contains('white')) {
+        //         cells[clickedSquareIndex].classList.replace('white', 'black')
+        //     }
 
 
-            let x = getX(clickedSquareIndex) //get target cell x-coordinate
-            let y = getY(clickedSquareIndex, x) //get target cell y-coordinate
 
-            board[x][y] = piece //move the piece into the target board spot
-            piece.x = x //change the piece's x into the target x
-            piece.y = y //change the piece's y into the target y
-            piece.firstTurn = false
 
-            addIdToCell(clickedSquareIndex, piece)
+        //     let x = getX(clickedSquareIndex) //get target cell x-coordinate
+        //     let y = getY(clickedSquareIndex, x) //get target cell y-coordinate
 
-            removeListeners()
-            changeTurn()
-            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
-            addListenerToOccupiedSquare()
-        }
+        //     board[x][y] = piece //move the piece into the target board spot
+        //     piece.x = x //change the piece's x into the target x
+        //     piece.y = y //change the piece's y into the target y
+        //     piece.firstTurn = false
+
+        //     addIdToCell(clickedSquareIndex, piece)
+
+        //     removeListeners()
+        //     changeTurn()
+        //     turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+        //     addListenerToOccupiedSquare()
+        // }
 
         function unClicked(e) {
             const clickedSquare = e.target
@@ -911,6 +967,10 @@ class Bishop extends ChessPiece {
     }
 }
 
+
+function placePiece() {
+
+}
 class Queen extends ChessPiece {
     constructor(x, y, name, color) {
         super(x, y, name, color)
@@ -1605,3 +1665,14 @@ turnIndicator.textContent = `Player ${whoseTurn()} Turn`
 
 document.body.append(turnIndicator, chessBoard)
 
+
+function capture(e) {
+    const a = e.target
+}
+
+function moves() {
+    let x, y, z
+    let cells
+
+    cells.addEventListener('click', capture)
+}
