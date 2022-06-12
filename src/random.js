@@ -5,7 +5,7 @@ chessBoard.classList.add('chessboard')
 
 let cells = []
 let blackTurn = false;
-let lastMoveIndex //To check for en compassant
+let lastMoveIndex //TO CHECK FOR EN PASSANT
 
 const board = [[{}, {}, {}, {}, {}, {}, {}, {}],
 [{}, {}, {}, {}, {}, {}, {}, {}],
@@ -91,8 +91,8 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
             addListenerToOccupiedSquare()
         } else {
             lastMoveIndex = clickedSquareIndex
-            //PAWN
-            //REMOVE CELL/BOARD DATA FOR EN COMPASSANT
+            //PAWN EXCLUSIVE
+            //REMOVE CELL/BOARD DATA FOR EN PASSANT
             if (cells[clickedSquareIndex].classList.contains('pink')) {
                 if (piece.color === 'black') {
                     board[x][y - 1] = {}
@@ -104,7 +104,7 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
                     cells[convertIndex(x, y + 1)].classList.remove('black')
                 }
                 cells[clickedSquareIndex].classList.remove('pink')
-                cells[clickedSquareIndex].removeEventListener('click', movePiece) //REMOVE LISTENER OF EN COMPASSANT CELL FROM PAWNMOVES()
+                cells[clickedSquareIndex].removeEventListener('click', movePiece) //REMOVE LISTENER OF EN PASSANT CELL FROM PAWNMOVES()
             }
 
             //RESET
@@ -135,6 +135,135 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
             board[x][y] = piece //MOVE THE PIECE TO THE TARGET BOARD SPOT
             piece.x = x //UPDATE THE X-COORDINATE INTO THE TARGET'S X-COORDINATE
             piece.y = y //UPDATE THE Y-COORDINATE INTO THE TARGET'S Y-COORDINATE
+
+            //PAWN EXCLUSIVE
+            //CHECK FOR PROMOTION
+            if (piece.name === 'pawn' && (piece.y === 0 || piece.y === 7)) {
+                let whiteRookCount = 0,
+                    blackRookCount = 0,
+                    whiteKnightCount = 0,
+                    blackKnightCount = 0,
+                    whiteBishopCount = 0,
+                    blackBishopCount = 0,
+                    whiteQueenCount = 0,
+                    blackQueenCount = 0
+
+                const promoBg = document.createElement('div')
+                promoBg.classList.add('promo-bg')
+                const promoContainer = document.createElement('div')
+                promoContainer.classList.add('promo-container')
+                promoBg.appendChild(promoContainer)
+
+                for (let i = 0; i < cells.length; i++) {
+                    if (cells[i].id === 'white-rook') whiteRookCount++
+                    if (cells[i].id === 'white-knight') whiteKnightCount++
+                    if (cells[i].id === 'white-bishop') whiteBishopCount++
+                    if (cells[i].id === 'white-queen') whiteQueenCount++
+                    if (cells[i].id === 'black-rook') blackRookCount++
+                    if (cells[i].id === 'black-knight') blackKnightCount++
+                    if (cells[i].id === 'black-bishop') blackBishopCount++
+                    if (cells[i].id === 'black-queen') blackQueenCount++
+                }
+
+                if (piece.y === 0) {
+                    if (whiteRookCount + whiteKnightCount + whiteBishopCount + whiteQueenCount < 7) {
+                        document.body.append(promoBg)
+                        if (whiteRookCount < 2) {
+                            let rookBox = document.createElement('div')
+                            rookBox.classList.add('box')
+                            rookBox.setAttribute('id', 'white-rook')
+                            promoContainer.appendChild(rookBox)
+                            rookBox.addEventListener('click', function () {
+                                board[x][y] = {}
+                                new Rook(x, y, 'rook', 'white')
+                                promoBg.remove()
+                            })
+                        }
+                        if (whiteKnightCount < 2) {
+                            let knightBox = document.createElement('div')
+                            knightBox.classList.add('box')
+                            knightBox.setAttribute('id', 'white-knight')
+                            promoContainer.appendChild(knightBox)
+                            knightBox.addEventListener('click', function () {
+                                board[x][y] = {}
+                                new Knight(x, y, 'knight', 'white')
+                                promoBg.remove()
+                            })
+                        }
+                        if (whiteBishopCount < 2) {
+                            let bishopBox = document.createElement('div')
+                            bishopBox.classList.add('box')
+                            bishopBox.setAttribute('id', 'white-bishop')
+                            promoContainer.appendChild(bishopBox)
+                            bishopBox.addEventListener('click', function () {
+                                board[x][y] = {}
+                                new Bishop(x, y, 'bishop', 'white')
+                                promoBg.remove()
+                            })
+                        }
+                        if (whiteQueenCount < 1) {
+                            let queenBox = document.createElement('div')
+                            queenBox.classList.add('box')
+                            queenBox.setAttribute('id', 'white-queen')
+                            promoContainer.appendChild(queenBox)
+                            queenBox.addEventListener('click', function () {
+                                board[x][y] = {}
+                                new Queen(x, y, 'queen', 'white')
+                                promoBg.remove()
+                            })
+                        }
+                    }
+                } else if (piece.y === 7) {
+                    if (blackRookCount + blackKnightCount + blackBishopCount + blackQueenCount < 7) {
+                        document.body.append(promoBg)
+                        if (blackRookCount < 2) {
+                            let rookBox = document.createElement('div')
+                            rookBox.classList.add('box')
+                            rookBox.setAttribute('id', 'black-rook')
+                            promoContainer.appendChild(rookBox)
+                            rookBox.addEventListener('click', function () {
+                                board[x][y] = {}
+                                new Rook(x, y, 'rook', 'black')
+                                promoBg.remove()
+                            })
+                        }
+                        if (blackKnightCount < 2) {
+                            white
+                            let knightBox = document.createElement('div')
+                            knightBox.classList.add('box')
+                            knightBox.setAttribute('id', 'black-knight')
+                            promoContainer.appendChild(knightBox)
+                            knightBox.addEventListener('click', function () {
+                                board[x][y] = {}
+                                new Knight(x, y, 'knight', 'black')
+                                promoBg.remove()
+                            })
+                        }
+                        if (blackBishopCount < 2) {
+                            let bishopBox = document.createElement('div')
+                            bishopBox.classList.add('box')
+                            bishopBox.setAttribute('id', 'black-bishop')
+                            promoContainer.appendChild(bishopBox)
+                            bishopBox.addEventListener('click', function () {
+                                board[x][y] = {}
+                                new Bishop(x, y, 'bishop', 'black')
+                                promoBg.remove()
+                            })
+                        }
+                        if (blackQueenCount < 1) {
+                            let queenBox = document.createElement('div')
+                            queenBox.classList.add('box')
+                            queenBox.setAttribute('id', 'black-queen')
+                            promoContainer.appendChild(queenBox)
+                            queenBox.addEventListener('click', function () {
+                                board[x][y] = {}
+                                new Queen(x, y, 'queen', 'black')
+                                promoBg.remove()
+                            })
+                        }
+                    }
+                }
+            }
 
             if (piece.name === 'pawn') {
                 piece.firstTurn = false
@@ -201,7 +330,7 @@ class Pawn extends ChessPiece {
                 }
             }
             //CHECK FOR ENCOMPASSANT
-            if (this.y === 4) { //ONLY SPOT WHERE EN COMPASSANT IS POSSIBLE FOR BLACK
+            if (this.y === 4) { //ONLY SPOT WHERE EN PASSANT IS POSSIBLE FOR BLACK
                 if (this.x - 1 >= 0) { //CHECK IF X IS OUT OF BOUNDS
                     if ((Object.keys(board[this.x - 1][this.y + 1]).length === 0) && (convertIndex(this.x - 1, this.y) === lastMoveIndex) &&
                         (cells[lastMoveIndex].id === 'white-pawn')) {
@@ -229,7 +358,7 @@ class Pawn extends ChessPiece {
                 }
             }
             //CHECK FOR ENCOMPASSANT
-            if (this.y === 3) { //ONLY SPOT WHERE EN COMPASSANT IS POSSIBLE FOR WHITE
+            if (this.y === 3) { //ONLY SPOT WHERE EN PASSANT IS POSSIBLE FOR WHITE
                 if (this.x - 1 >= 0) {
                     if ((Object.keys(board[this.x - 1][this.y - 1]).length === 0) && (convertIndex(this.x - 1, this.y) === lastMoveIndex) &&
                         (cells[lastMoveIndex].id === 'black-pawn')) {
@@ -286,7 +415,7 @@ class Pawn extends ChessPiece {
             cells[captureCellIndex[i]].classList.add('red')
             cells[captureCellIndex[i]].addEventListener('click', placePiece)
         }
-        //ADD LISTENER/CLASS TO EN COMPASSANT CELL
+        //ADD LISTENER/CLASS TO EN PASSANT CELL
         if (encompassantIndex !== 0) {
             cells[encompassantIndex].classList.add('pink')
             cells[encompassantIndex].addEventListener('click', placePiece)
