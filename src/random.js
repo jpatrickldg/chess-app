@@ -393,10 +393,12 @@ class Rook extends ChessPiece {
             if (blackTurn === true) {
                 cellBoard[this.x][this.y].classList.remove("black")
                 cellBoard[this.x][y].classList.remove("white")
+                cellBoard[x][this.y].classList.remove("white")
                 new Rook(x, y, 'rook', 'black')
             } else {
                 cellBoard[this.x][this.y].classList.remove("white")
                 cellBoard[this.x][y].classList.remove("black")
+                cellBoard[x][this.y].classList.remove("black")
                 new Rook(x, y, 'rook', 'white')
             }
             board[this.x][this.y] = {}
@@ -1017,10 +1019,12 @@ class Queen extends ChessPiece {
             if(blackTurn === true){
                 cellBoard[this.x][this.y].classList.remove("black")
                 cellBoard[this.x][y].classList.remove("white")
+                cellBoard[x][this.y].classList.remove("white")
                 new Queen(x,y,'queen', 'black')
             }else{
                 cellBoard[this.x][this.y].classList.remove("white")
                 cellBoard[this.x][y].classList.remove("black")
+                cellBoard[x][this.y].classList.remove("black")
                 new Queen(x,y,'queen', 'white')
             }
             board[this.x][this.y]={}
