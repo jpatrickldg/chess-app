@@ -25,6 +25,32 @@ span {
   text-align: center;
 }
 
+.promo-bg {
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.699);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.promo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: fit-content;
+  border: 3px solid rgb(69, 133, 133);
+  margin: 365px auto;
+  background-color: rgb(255, 234, 208);
+}
+
+.box {
+  width: 75px;
+  height: 75px;
+  border: 3px solid rgb(69, 133, 133);
+}
+
 .chessboard {
   border: 1vw solid rgb(248, 210, 159);
   display: flex;
@@ -51,20 +77,28 @@ span {
   background-color: rgb(255, 234, 208);
 }
 
+.blur {
+  opacity: 0.5;
+}
+
 .blue {
   background-color: blue;
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .red {
   background-color: red;
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .pink {
   background-color: pink;
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .gray {
   background-color: gray;
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 #white-rook {
