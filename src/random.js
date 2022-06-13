@@ -148,12 +148,6 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
                     whiteQueenCount = 0,
                     blackQueenCount = 0
 
-                const promoBg = document.createElement('div')
-                promoBg.classList.add('promo-bg')
-                const promoContainer = document.createElement('div')
-                promoContainer.classList.add('promo-container')
-                promoBg.appendChild(promoContainer)
-
                 for (let i = 0; i < cells.length; i++) {
                     if (cells[i].id === 'white-rook') whiteRookCount++
                     if (cells[i].id === 'white-knight') whiteKnightCount++
@@ -165,102 +159,103 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
                     if (cells[i].id === 'black-queen') blackQueenCount++
                 }
 
+                const promoBg = document.createElement('div')
+                promoBg.classList.add('promo-bg')
+                const promoContainer = document.createElement('div')
+                promoContainer.classList.add('promo-container')
+                promoBg.appendChild(promoContainer)
+
+                const rookBox = document.createElement('div')
+                rookBox.classList.add('box')
+                const knightBox = document.createElement('div')
+                knightBox.classList.add('box')
+                const bishopBox = document.createElement('div')
+                bishopBox.classList.add('box')
+                const queenBox = document.createElement('div')
+                queenBox.classList.add('box')
+
+                promoContainer.append(rookBox, knightBox, bishopBox, queenBox)
+
+
                 if (piece.y === 0) {
+                    rookBox.setAttribute('id', 'white-rook')
+                    knightBox.setAttribute('id', 'white-knight')
+                    bishopBox.setAttribute('id', 'white-bishop')
+                    queenBox.setAttribute('id', 'white-queen')
+
                     if (whiteRookCount + whiteKnightCount + whiteBishopCount + whiteQueenCount < 7) {
                         document.body.append(promoBg)
                         if (whiteRookCount < 2) {
-                            let rookBox = document.createElement('div')
-                            rookBox.classList.add('box')
-                            rookBox.setAttribute('id', 'white-rook')
-                            promoContainer.appendChild(rookBox)
                             rookBox.addEventListener('click', function () {
                                 board[x][y] = {}
                                 new Rook(x, y, 'rook', 'white')
                                 promoBg.remove()
                             })
-                        }
+                        } else rookBox.classList.add('blur')
+
                         if (whiteKnightCount < 2) {
-                            let knightBox = document.createElement('div')
-                            knightBox.classList.add('box')
-                            knightBox.setAttribute('id', 'white-knight')
-                            promoContainer.appendChild(knightBox)
                             knightBox.addEventListener('click', function () {
                                 board[x][y] = {}
                                 new Knight(x, y, 'knight', 'white')
                                 promoBg.remove()
                             })
-                        }
+                        } else knightBox.classList.add('blur')
+
                         if (whiteBishopCount < 2) {
-                            let bishopBox = document.createElement('div')
-                            bishopBox.classList.add('box')
-                            bishopBox.setAttribute('id', 'white-bishop')
-                            promoContainer.appendChild(bishopBox)
                             bishopBox.addEventListener('click', function () {
                                 board[x][y] = {}
                                 new Bishop(x, y, 'bishop', 'white')
                                 promoBg.remove()
                             })
-                        }
+                        } else bishopBox.classList.add('blur')
+
                         if (whiteQueenCount < 1) {
-                            let queenBox = document.createElement('div')
-                            queenBox.classList.add('box')
-                            queenBox.setAttribute('id', 'white-queen')
-                            promoContainer.appendChild(queenBox)
                             queenBox.addEventListener('click', function () {
                                 board[x][y] = {}
                                 new Queen(x, y, 'queen', 'white')
                                 promoBg.remove()
                             })
-                        }
+                        } else queenBox.classList.add('blur')
                     }
                 } else if (piece.y === 7) {
+                    rookBox.setAttribute('id', 'black-rook')
+                    knightBox.setAttribute('id', 'black-knight')
+                    bishopBox.setAttribute('id', 'black-bishop')
+                    queenBox.setAttribute('id', 'black-queen')
+
                     if (blackRookCount + blackKnightCount + blackBishopCount + blackQueenCount < 7) {
                         document.body.append(promoBg)
                         if (blackRookCount < 2) {
-                            let rookBox = document.createElement('div')
-                            rookBox.classList.add('box')
-                            rookBox.setAttribute('id', 'black-rook')
-                            promoContainer.appendChild(rookBox)
                             rookBox.addEventListener('click', function () {
                                 board[x][y] = {}
                                 new Rook(x, y, 'rook', 'black')
                                 promoBg.remove()
                             })
-                        }
+                        } else rookBox.classList.add('blur')
+
                         if (blackKnightCount < 2) {
-                            white
-                            let knightBox = document.createElement('div')
-                            knightBox.classList.add('box')
-                            knightBox.setAttribute('id', 'black-knight')
-                            promoContainer.appendChild(knightBox)
                             knightBox.addEventListener('click', function () {
                                 board[x][y] = {}
                                 new Knight(x, y, 'knight', 'black')
                                 promoBg.remove()
                             })
-                        }
+                        } else knightBox.classList.add('blur')
+
                         if (blackBishopCount < 2) {
-                            let bishopBox = document.createElement('div')
-                            bishopBox.classList.add('box')
-                            bishopBox.setAttribute('id', 'black-bishop')
-                            promoContainer.appendChild(bishopBox)
                             bishopBox.addEventListener('click', function () {
                                 board[x][y] = {}
                                 new Bishop(x, y, 'bishop', 'black')
                                 promoBg.remove()
                             })
-                        }
+                        } else bishopBox.classList.add('blur')
+
                         if (blackQueenCount < 1) {
-                            let queenBox = document.createElement('div')
-                            queenBox.classList.add('box')
-                            queenBox.setAttribute('id', 'black-queen')
-                            promoContainer.appendChild(queenBox)
                             queenBox.addEventListener('click', function () {
                                 board[x][y] = {}
                                 new Queen(x, y, 'queen', 'black')
                                 promoBg.remove()
                             })
-                        }
+                        } else queenBox.classList.add('blur')
                     }
                 }
             }
@@ -278,26 +273,24 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
     }
 }
 
-// function passUnclickPieceParams()
-
 class ChessPiece {
     constructor(x, y, name, color) {
         this.name = name;
         this.color = color;
         this.x = x;
         this.y = y;
-        this.move();
-        this.addId();
+        this.place();
+        this.addClassAndID();
     }
 }
 
-//Place piece in the board
-ChessPiece.prototype.move = function () {
+//PLACE THE PIECE ON THE BOARD
+ChessPiece.prototype.place = function () {
     board[this.x][this.y] = this;
 }
 
-//Add id into cell array corresponding to its 2d array counterpart
-ChessPiece.prototype.addId = function () {
+//ADD ID AND CLASS TO CELL EQUIVALENT TO THE BOARD
+ChessPiece.prototype.addClassAndID = function () {
     let cellsIndex = (this.y * 8) + this.x
     cells[cellsIndex].id = `${this.color}-${this.name}`
     cells[cellsIndex].classList.add(this.color)
