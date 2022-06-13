@@ -355,7 +355,10 @@ function getY(index, x) {
     const y = (index - x) / 8
     return y
 }
-
+let blackLeftRookFirstMove = true
+let blackRightRookFirstMove = true
+let whiteLeftRookFirstMove = true
+let whiteRightRookFirstMove = true
 class Rook extends ChessPiece {
     constructor(x, y, name, color) {
         super(x, y, name, color)
@@ -402,6 +405,19 @@ class Rook extends ChessPiece {
             board[this.x][this.y] = {}
             cellBoard[this.x][this.y].id = ""
 
+            if(blackTurn===true){
+                if(cellBoard[0][0].id === ""){
+                    blackLeftRookFirstMove = false
+                }else if(cellBoard[7][0].id === ""){
+                    blackRightRookFirstMove = false
+                }
+            }else if(blackTurn===false){
+                if(cellBoard[0][7].id === ""){
+                    whiteLeftRookFirstMove = false
+                }else if(cellBoard[7][7].id === ""){
+                    whiteRightRookFirstMove = false
+                }
+            }
             removeListeners()
             changeTurn()
             turnIndicator.textContent = `Player ${whoseTurn()} Turn`
@@ -1339,7 +1355,8 @@ class Queen extends ChessPiece {
 
     }
 }
-
+let blackKingFirstMove = true
+let whiteKingFirstMove = true
 class King extends ChessPiece {
     constructor(x, y, name, color) {
         super(x, y, name, color)
@@ -1502,7 +1519,137 @@ class King extends ChessPiece {
             cells[captureCellIndex[i]].classList.add('red')
             cells[captureCellIndex[i]].addEventListener('click', placeKing)
         }
+        //Castling
+       
+        const castlingLeft =(e)=>{
+            const targetCell = e.target
+            const targetCellIndex = Array.from(targetCell.parentElement.children).indexOf(targetCell)
+            let x = targetCellIndex % 8	
+            let y = (targetCellIndex - x) / 8
+        
+             if (blackTurn === true) {
+                        cellBoard[this.x][this.y].classList.remove("black")
+                        new King(x, y, 'king', 'black')
+            //Place Rook
+            new Rook(3, 0, 'rook', 'black')
+            cellBoard[0][0].id = ""
+            cellBoard[0][0].classList.remove("black")
+            board[0][0] = {}
+            
+                    } else {
+                        cellBoard[this.x][this.y].classList.remove("white")
+                        new King(x, y, 'king', 'white')
+            //Place Rook
+            new Rook(3, 7, 'rook', 'white')
+            cellBoard[0][7].id = ""
+            cellBoard[0][7].classList.remove("white")
+            board[0][7] = {}
+                    }
+            board[this.x][this.y] = {}
+                    cellBoard[this.x][this.y].id = ""
+        
+            for (let i = 0; i < 8; i++) {
+                        cellBoard[i][this.y].classList.remove('blue')
+                        cellBoard[i][this.y].removeEventListener("click",castlingLeft)
+                        cellBoard[i][this.y].removeEventListener("click",castlingRight)
+                    }
+            
+            for (let i = 0; i < openCellIndex.length; i++) {
+                cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placeKing)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placeKing)
+            }
+            cells[existingIndex].classList.remove('gray')
+    
+            removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+            addListenerToOccupiedSquare()
+        }
+        const castlingRight =(e)=>{
+            const targetCell = e.target
+            const targetCellIndex = Array.from(targetCell.parentElement.children).indexOf(targetCell)
+            let x = targetCellIndex % 8	
+            let y = (targetCellIndex - x) / 8
+        
+             if (blackTurn === true) {
+                        cellBoard[this.x][this.y].classList.remove("black")
+                        new King(x, y, 'king', 'black')
+            //Place Rook
+            new Rook(5, 0, 'rook', 'black')
+            cellBoard[7][0].id = ""
+            cellBoard[7][0].classList.remove("black")
+            board[7][0] = {}
+            
+            } else {
+                cellBoard[this.x][this.y].classList.remove("white")
+                new King(x, y, 'king', 'white')
+            //Place Rook
+            new Rook(5, 7, 'rook', 'white')
+            cellBoard[7][7].id = ""
+            cellBoard[7][7].classList.remove("white")
+            board[7][7] = {}
+                    }
+            board[this.x][this.y] = {}
+                    cellBoard[this.x][this.y].id = ""
+        
+            for (let i = 0; i < 8; i++) {
+                        cellBoard[i][this.y].classList.remove('blue')
+                        cellBoard[i][this.y].removeEventListener("click",castlingLeft)
+                        cellBoard[i][this.y].removeEventListener("click",castlingRight)
+                    }
+            
+            for (let i = 0; i < openCellIndex.length; i++) {
+                cells[openCellIndex[i]].classList.remove('blue')
+                cells[openCellIndex[i]].removeEventListener('click', placeKing)
+            }
+            for (let i = 0; i < captureCellIndex.length; i++) {
+                cells[captureCellIndex[i]].classList.remove('red')
+                cells[captureCellIndex[i]].removeEventListener('click', placeKing)
+            }
+            cells[existingIndex].classList.remove('gray')
+    
+            removeListeners()
+            changeTurn()
+            turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+            addListenerToOccupiedSquare()
+        }
+        for (let i = this.x - 1; i > -1; i--) {
+            if(cellBoard[i][this.y].id === "black-rook" || cellBoard[i][this.y].id === "white-rook"){
+                if(!blackTurn && whiteKingFirstMove && whiteLeftRookFirstMove){
+                    cellBoard[2][this.y].classList.add("blue")
+                    cellBoard[2][this.y].addEventListener("click", castlingLeft)
+                }else if(blackTurn && blackKingFirstMove && blackLeftRookFirstMove){
+                    cellBoard[2][this.y].classList.add("blue")
+                    cellBoard[2][this.y].addEventListener("click", castlingLeft)
+                }else{
+                    break
+                }
 
+            }else if(cellBoard[i][this.y].classList.contains("white")||cellBoard[i][this.y].classList.contains("black")){
+                console.log("break")
+                break
+            }
+        }
+        for (let i = this.x +1; i < 8; i++) {
+            if(cellBoard[i][this.y].id === "black-rook" || cellBoard[i][this.y].id === "white-rook"){
+                if(!blackTurn && whiteKingFirstMove && whiteRightRookFirstMove){
+                    cellBoard[6][this.y].classList.add("blue")
+                    cellBoard[6][this.y].addEventListener("click", castlingRight)
+                }else if(blackTurn && blackKingFirstMove && blackRightRookFirstMove){
+                    cellBoard[6][this.y].classList.add("blue")
+                    cellBoard[6][this.y].addEventListener("click", castlingRight)
+                }else{
+                    break
+                }
+            }else if(cellBoard[i][this.y].classList.contains("white")||cellBoard[i][this.y].classList.contains("black")){
+                console.log("break")
+                break
+            }
+        }
         function placeKing(e) {
             const clickedSquare = e.target
             const clickedSquareIndex = Array.from(clickedSquare.parentElement.children).indexOf(clickedSquare)
@@ -1539,6 +1686,17 @@ class King extends ChessPiece {
             piece.y = y //change the piece's y into the target y
             piece.firstTurn = false
 
+            //remove Castling listener ,bgcolor & change firstKingMove to false
+            for (let i = 0; i < 8; i++) {
+                cellBoard[i][0].removeEventListener("click",castlingLeft)
+                cellBoard[i][0].removeEventListener("click",castlingRight)
+                cellBoard[i][7].removeEventListener("click",castlingLeft)
+                cellBoard[i][7].removeEventListener("click",castlingRight)
+                cellBoard[i][0].classList.remove("blue")
+                cellBoard[i][7].classList.remove("blue")
+            }
+            blackTurn?blackKingFirstMove = false:whiteKingFirstMove = false
+
             addIdToCell(clickedSquareIndex, piece)
 
             removeListeners()
@@ -1560,6 +1718,15 @@ class King extends ChessPiece {
                 cells[captureCellIndex[i]].classList.remove('red')
                 cells[captureCellIndex[i]].removeEventListener('click', placeKing)
             }
+            //remove Castling listener & bgcolor
+            for (let i = 0; i < 8; i++) {
+                cellBoard[i][0].removeEventListener("click",castlingLeft)
+                cellBoard[i][0].removeEventListener("click",castlingRight)
+                cellBoard[i][7].removeEventListener("click",castlingLeft)
+                cellBoard[i][7].removeEventListener("click",castlingRight)
+                cellBoard[i][0].classList.remove("blue")
+                cellBoard[i][7].classList.remove("blue")
+            }
 
             addListenerToOccupiedSquare()
             cells[clickedSquareIndex].removeEventListener('click', unClicked)
@@ -1578,20 +1745,20 @@ function renderPieces() {
 
     new Rook(0, 7, 'rook', 'white')
     new Rook(7, 7, 'rook', 'white')
-    new Knight(1, 7, 'knight', 'white')
-    new Knight(6, 7, 'knight', 'white')
-    new Bishop(2, 7, 'bishop', 'white')
-    new Bishop(5, 7, 'bishop', 'white')
-    new Queen(3, 7, 'queen', 'white')
+    new Knight(1, 5, 'knight', 'white')
+    new Knight(6, 5, 'knight', 'white')
+    new Bishop(2, 5, 'bishop', 'white')
+    new Bishop(5, 5, 'bishop', 'white')
+    new Queen(3, 5, 'queen', 'white')
     new King(4, 7, 'king', 'white')
 
     new Rook(0, 0, 'rook', 'black')
     new Rook(7, 0, 'rook', 'black')
     new Knight(1, 0, 'knight', 'black')
-    new Knight(6, 0, 'knight', 'black')
-    new Bishop(2, 0, 'bishop', 'black')
-    new Bishop(5, 0, 'bishop', 'black')
-    new Queen(3, 0, 'queen', 'black')
+    new Knight(6, 2, 'knight', 'black')
+    new Bishop(2, 2, 'bishop', 'black')
+    new Bishop(5, 2, 'bishop', 'black')
+    new Queen(3, 2, 'queen', 'black')
     new King(4, 0, 'king', 'black')
 }
 
