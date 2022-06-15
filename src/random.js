@@ -1,4 +1,5 @@
 const turnIndicator = document.createElement('h3')
+turnIndicator.setAttribute('id', 'turn-indicator')
 const chessBoard = document.createElement('main')
 chessBoard.setAttribute('id', 'chess-board')
 chessBoard.classList.add('chessboard')
@@ -224,6 +225,18 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
                 } else squaresMoved = 2
             }
 
+            if (piece.color === 'white') {
+                whiteTime.pauseTimer()
+                timeDisplay.textContent = blackTime.displayTime()
+                blackTime.startTimer()
+                whiteTimeDisplay.textContent = whiteTime.displayTime()
+            } else {
+                blackTime.pauseTimer()
+                timeDisplay.textContent = whiteTime.displayTime()
+                whiteTime.startTimer()
+                blackTimeDisplay.textContent = blackTime.displayTime()
+            }
+
             addCellClassAndID(clickedSquareIndex, piece) //ADD PIECE'S CLASS AND ID TO THE TARGET CELL
             // removeListeners()
             changeTurn()
@@ -232,7 +245,6 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
         }
     }
 }
-
 
 class ChessPiece {
     constructor(x, y, name, color) {
@@ -772,12 +784,12 @@ class Queen extends ChessPiece {
                 cellBoard[this.x][this.y].classList.remove("black")
                 cellBoard[this.x][y].classList.remove("white")
                 cellBoard[x][this.y].classList.remove("white")
-                new Queen(x,y,'queen', 'black')
-            }else{
+                new Queen(x, y, 'queen', 'black')
+            } else {
                 cellBoard[this.x][this.y].classList.remove("white")
                 cellBoard[this.x][y].classList.remove("black")
                 cellBoard[x][this.y].classList.remove("black")
-                new Queen(x,y,'queen', 'white')
+                new Queen(x, y, 'queen', 'white')
             }
             board[this.x][this.y] = {}
             cellBoard[this.x][this.y].id = ""
@@ -962,12 +974,8 @@ class Queen extends ChessPiece {
                 if (this.x + i < 8) {
                     if (Object.keys(board[this.x + i][this.y + i]).length === 0) {
                         openCellIndex.push(convertIndex(this.x + i, this.y + i))
-                        console.log(i, openCellIndex)
-                        console.log(captureCellIndex)
                     } else if (board[this.x + i][this.y + i].color === oppositeColor) {
-                        console.log(i)
                         captureCellIndex.push(convertIndex(this.x + i, this.y + i))
-                        console.log(i, captureCellIndex)
                         break
                     } else break
                 } else break
@@ -1186,7 +1194,7 @@ function addListenerToOccupiedSquare() {
     }
 }
 
-addListenerToOccupiedSquare()
+// addListenerToOccupiedSquare()
 
 function movePiece(e) {
     const piece = e.target;
@@ -1216,6 +1224,131 @@ function changeTurn() {
 }
 
 const whoseTurn = () => blackTurn ? 'Black' : 'White'
-turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+// turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+turnIndicator.textContent = `Start Game`
 
-document.body.append(turnIndicator, chessBoard)
+const bottomContainer = document.createElement('div')
+bottomContainer.setAttribute('id', 'bottom-container')
+
+const setTimeLabel = document.createElement('h3')
+setTimeLabel.setAttribute('id', 'set-time-label')
+setTimeLabel.textContent = 'Set Time Limit (mins): '
+const setTimeInput = document.createElement('input')
+setTimeInput.setAttribute('type', 'number')
+setTimeInput.setAttribute('id', 'set-time-input')
+
+
+const whiteBox = document.createElement('div')
+whiteBox.setAttribute('id', 'white-box')
+whiteBox.classList.add('bottom-box')
+const whiteHeading = document.createElement('h2')
+whiteHeading.textContent = 'White'
+const whiteTimeDisplay = document.createElement('h3')
+const timeBox = document.createElement('div')
+timeBox.setAttribute('id', 'time-box')
+timeBox.classList.add('bottom-box')
+const timeDisplay = document.createElement('h1')
+const blackBox = document.createElement('div')
+blackBox.setAttribute('id', 'black-box')
+blackBox.classList.add('bottom-box')
+const blackHeading = document.createElement('h2')
+blackHeading.textContent = 'Black'
+const blackTimeDisplay = document.createElement('h3')
+
+whiteBox.append(whiteHeading, whiteTimeDisplay)
+timeBox.append(timeDisplay)
+blackBox.append(blackHeading, blackTimeDisplay)
+bottomContainer.append(setTimeLabel, setTimeInput)
+
+let timed
+
+class Timer {
+    constructor(duration) {
+        this.duration = duration
+    }
+
+    startTimer() {
+        let time = this
+        let timer = this.duration, minutes, seconds
+
+        function timeStart() {
+            minutes = parseInt(timer / 60, 10)
+            seconds = parseInt(timer % 60, 10)
+            minutes = minutes < 10 ? `0${minutes}` : minutes
+            seconds = seconds < 10 ? `0${seconds}` : seconds
+            if (timer >= 0) {
+                timeDisplay.textContent = `${minutes}:${seconds}`
+                time.duration = timer
+            }
+            timer--
+        }
+        timeStart()
+        timed = setInterval(timeStart, 1000)
+    }
+
+    pauseTimer() {
+        clearInterval(timed)
+    }
+
+    displayTime() {
+        let minutes = parseInt(this.duration / 60, 10)
+        let seconds = parseInt(this.duration % 60, 10)
+        minutes = minutes < 10 ? `0${minutes}` : minutes
+        seconds = seconds < 10 ? `0${seconds}` : seconds
+        return `${minutes}:${seconds}`
+    }
+}
+
+let blackTime = new Timer()
+let whiteTime = new Timer()
+
+setTimeInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        let seconds = setTimeInput.value * 60
+        blackTime.duration = seconds
+        whiteTime.duration = seconds
+        setTimeLabel.remove()
+        setTimeInput.remove()
+
+        timeDisplay.textContent = whiteTime.displayTime()
+
+        whiteTimeDisplay.textContent = whiteTime.displayTime()
+        blackTimeDisplay.textContent = blackTime.displayTime()
+
+        turnIndicator.addEventListener('click', startGame)
+        turnIndicator.style.cursor = 'pointer'
+
+        bottomContainer.append(whiteBox, timeBox, blackBox)
+    }
+})
+
+// whiteTime.startTimer()
+
+let checkTimeVariable
+
+
+function startGame() {
+    addListenerToOccupiedSquare()
+    turnIndicator.textContent = `Player ${whoseTurn()} Turn`
+    turnIndicator.style.cursor = 'default'
+    whiteTime.startTimer()
+    turnIndicator.removeEventListener('click', startGame)
+    checkTime()
+    checkTimeVariable = setInterval(checkTime, 1000)
+}
+
+function checkTime() {
+    if (whiteTime.duration === 0) {
+        removeListeners()
+        turnIndicator.textContent = `Player Black Won!`
+        whiteTimeDisplay.textContent = whiteTime.displayTime()
+        clearInterval(checkTimeVariable)
+    } else if (blackTime.duration === 0) {
+        removeListeners()
+        turnIndicator.textContent = `Player White Won!`
+        blackTimeDisplay.textContent = blackTime.displayTime()
+        clearInterval(checkTimeVariable)
+    }
+}
+
+document.body.append(turnIndicator, chessBoard, bottomContainer)
