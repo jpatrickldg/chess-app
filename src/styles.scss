@@ -25,8 +25,36 @@ span {
     text-align: center;
 }
 
+.promo-bg {
+    z-index: 999;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.699);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.promo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: fit-content;
+
+    border: 3px solid rgb(143, 121, 94);
+    margin: 365px auto;
+    background-color: rgb(255, 234, 208);
+}
+
+.box {
+    width: 75px;
+    height: 75px;
+    border: 3px solid rgb(143, 121, 94);
+}
+
 .chessboard {
-    border: 1vw solid rgb(248, 210, 159);
+    border: 16px solid rgb(255, 234, 208);
+    border-radius: 10px;
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;
@@ -44,27 +72,35 @@ span {
 }
 
 .dark {
-    background-color: rgb(69, 133, 133);
+    background-color: rgb(143, 121, 94);
 }
 
 .light {
     background-color: rgb(255, 234, 208);
 }
 
+.blur {
+    opacity: 0.5;
+}
+
 .blue {
-    background-color: blue;
+    background-color: rgb(73, 196, 93);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .red {
-    background-color: red;
+    background-color: rgb(240, 80, 80);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .pink {
-    background-color: pink;
+    background-color: rgb(192, 251, 255);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .gray {
-    background-color: gray;
+    background-color: rgb(170, 163, 163);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 #white-rook {
