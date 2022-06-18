@@ -456,6 +456,7 @@ function passMovePieceParamsPawn(piece, originIndex, openCellIndex, captureCellI
 
                         changeTurn()
                         turnIndicator.textContent = `${whoseTurn()} Turn`
+                        removeListeners()
                         addListenerToOccupiedSquare()
                     }
                     addCheckIndicatorBlack()
@@ -471,6 +472,7 @@ function passMovePieceParamsPawn(piece, originIndex, openCellIndex, captureCellI
 
                         changeTurn()
                         turnIndicator.textContent = `${whoseTurn()} Turn`
+                        removeListeners()
                         addListenerToOccupiedSquare()
                     }
                     addCheckIndicatorWhite()
@@ -606,8 +608,6 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
                 }
             }
 
-            // isBlackKingChecked()
-            // isWhiteKingChecked()
             addListenerToOccupiedSquare()
         } else {
             lastMoveIndex = clickedSquareIndex
@@ -703,6 +703,7 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
 
                     changeTurn()
                     turnIndicator.textContent = `${whoseTurn()} Turn`
+                    removeListeners()
                     addListenerToOccupiedSquare()
                 }
                 addCheckIndicatorBlack()
@@ -718,6 +719,7 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
 
                     changeTurn()
                     turnIndicator.textContent = `${whoseTurn()} Turn`
+                    removeListeners()
                     addListenerToOccupiedSquare()
                 }
                 addCheckIndicatorWhite()
