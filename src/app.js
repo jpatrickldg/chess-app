@@ -446,7 +446,7 @@ function passMovePieceParamsPawn(piece, originIndex, openCellIndex, captureCellI
             function setDefault() {
                 if (piece.color === 'white') {
                     if (isBlackCheckedMate()) {
-                        turnIndicator.textContent = `Checked Mate. White Won!`
+                        turnIndicator.textContent = `Checkmate. White Won!`
                         zeroClock()
                     } else {
                         whiteTime.pauseTimer()
@@ -462,7 +462,7 @@ function passMovePieceParamsPawn(piece, originIndex, openCellIndex, captureCellI
                     addCheckIndicatorBlack()
                 } else if (piece.color === 'black') {
                     if (isWhiteCheckedMate()) {
-                        turnIndicator.textContent = `Checked Mate. White Won!`
+                        turnIndicator.textContent = `Checkmate. Black Won!`
                         zeroClock()
                     } else {
                         blackTime.pauseTimer()
@@ -1945,12 +1945,12 @@ function startGame() {
 function checkTime() {
     if (whiteTime.duration === 0) {
         removeListeners()
-        turnIndicator.textContent = `Black Won!`
+        turnIndicator.textContent = `Time's up! Black Won!`
         whiteTimeDisplay.textContent = whiteTime.displayTime()
         clearInterval(checkTimeVariable)
     } else if (blackTime.duration === 0) {
         removeListeners()
-        turnIndicator.textContent = `White Won!`
+        turnIndicator.textContent = `Time's up! White Won!`
         blackTimeDisplay.textContent = blackTime.displayTime()
         clearInterval(checkTimeVariable)
     }
