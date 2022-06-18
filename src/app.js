@@ -693,7 +693,7 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
 
             if (piece.color === 'white') {
                 if (isBlackCheckedMate()) {
-                    turnIndicator.textContent = `Checked Mate. White Won!`
+                    turnIndicator.textContent = `Checkmate. White Won!`
                     zeroClock()
                 } else {
                     whiteTime.pauseTimer()
@@ -709,7 +709,7 @@ function passMovePieceParams(piece, originIndex, openCellIndex, captureCellIndex
                 addCheckIndicatorBlack()
             } else if (piece.color === 'black') {
                 if (isWhiteCheckedMate()) {
-                    turnIndicator.textContent = `Checked Mate. White Won!`
+                    turnIndicator.textContent = `Checkmate. Black Won!`
                     zeroClock()
                 } else {
                     blackTime.pauseTimer()
